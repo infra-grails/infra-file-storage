@@ -3,6 +3,22 @@ Grails plugin: mirari-fileStorage
 
 Stores files on Amazon S3 when deployed, on localhost when testing/developing.
 
+Installation
+---------------------
+
+Clone plugin sources (you may fork it at first, and that'll be great) and set sources directory in `BuildConfig
+.groovy`:
+
+    grails.plugin.location.'mirari-fileStorage' = "../mirari-fileStorage"
+
+You will need valid S3 credentials to deploy the plugin.
+
+And notice: you shouldn't call `grails install-plugin` or add direct dependency to `BuildConfig.groovy`!
+
+Otherwise, you may download packaged version of the plugin and call
+
+`grails install-plugin grails-mirari-file-storage.0.1.zip`
+
 Usage
 ---------------------
 
