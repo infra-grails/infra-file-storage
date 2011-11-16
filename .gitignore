@@ -1,0 +1,11 @@
+target
+*.iml
+*.idea
+.idea
+.idea/
+stacktrace.log
+out/
+.classpath
+.project
+.settings
+web-app/storage
