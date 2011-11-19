@@ -1,7 +1,7 @@
 import grails.util.Environment
-import ru.mirari.file.FileStorageHolder
-import ru.mirari.file.LocalFileStorage
-import ru.mirari.file.S3FileStorage
+import ru.mirari.infra.file.FileStorageHolder
+import ru.mirari.infra.file.LocalFileStorage
+import ru.mirari.infra.file.S3FileStorage
 
 class MirariFileStorageGrailsPlugin {
     // the plugin version

@@ -1,4 +1,4 @@
-package ru.mirari.file;
+package ru.mirari.infra.file;
 
 import groovy.util.ConfigObject;
 import org.apache.commons.io.FileUtils;
