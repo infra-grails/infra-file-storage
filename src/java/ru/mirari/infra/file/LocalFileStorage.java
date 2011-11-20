@@ -21,16 +21,16 @@ public class LocalFileStorage extends FileStoragePrototype {
 
   @Autowired
   LocalFileStorage(GrailsApplication grailsApplication) {
-    ConfigObject config = (ConfigObject)grailsApplication.getConfig().get("grails");
-    config = (ConfigObject)config.get("mirari");
-    config = (ConfigObject)config.get("fileStorage");
+    ConfigObject config = (ConfigObject)grailsApplication.getConfig().get("mirari");
+    config = (ConfigObject)config.get("infra");
+    config = (ConfigObject)config.get("file");
     Map localConf = ((ConfigObject)config.get("local")).flatten();
 
     localRoot = localConf.get("localRoot").toString().isEmpty() ? localRoot : localConf.get("localRoot").toString();
     defaultBucket = localConf.get("defaultBucket").toString();
     urlRoot = localConf.get("urlRoot").toString();
     if (urlRoot == null || urlRoot.isEmpty()) {
-      urlRoot = ((ConfigObject)grailsApplication.getConfig().get("grails")).get("serverURL").toString();
+      urlRoot = ((Map)grailsApplication.getConfig().get("grails")).get("serverURL").toString();
     }
     if (!urlRoot.endsWith("/")) {
       urlRoot = urlRoot.concat("/");

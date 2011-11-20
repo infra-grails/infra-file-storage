@@ -24,7 +24,7 @@ Provides convenient methods to store files on local path in dev/test mode and on
 '''
 
     // URL to the plugin's documentation
-    def documentation = "http://grails.org/plugin/mirari-file-storage"
+    def documentation = "http://grails.org/plugin/mirari-infra-file"
 
     // Extra (optional) plugin metadata
 
@@ -38,10 +38,10 @@ Provides convenient methods to store files on local path in dev/test mode and on
     //    def developers = [ [ name: "Joe Bloggs", email: "joe@bloggs.net" ]]
 
     // Location of the plugin's issue tracker.
-        def issueManagement = [ system: "github", url: "https://github.com/alari/mirari-fileStorage/issues" ]
+        def issueManagement = [ system: "github", url: "https://github.com/alari/mirari-infra-file/issues" ]
 
     // Online location of the plugin's browseable source code.
-        def scm = [ url: "http://github.com/alari/mirari-fileStorage" ]
+        def scm = [ url: "http://github.com/alari/mirari-infra-file" ]
 
     def doWithWebDescriptor = { xml ->
         // TODO Implement additions to web.xml (optional), this event occurs before
