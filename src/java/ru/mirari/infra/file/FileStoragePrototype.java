@@ -11,21 +11,21 @@ import java.security.NoSuchAlgorithmException;
  * @since 11/16/11 12:10 PM
  */
 abstract public class FileStoragePrototype implements FileStorage {
-  public void store(final File file, final FileHolder holder, String filename) throws IOException, NoSuchAlgorithmException, ServiceException {
-    store(file, holder.getFilesPath(), filename, holder.getFilesBucket());
-  }
-
-  public void delete(final FileHolder holder, String filename) throws ServiceException {
-    delete(holder.getFilesPath(), filename, holder.getFilesBucket());
-  }
-
-  public void delete(final FileHolder holder) throws ServiceException {
-    for (String fn : holder.getFileNames()) {
-      delete(holder, fn);
+    public void store(final File file, final FileHolder holder, String filename) throws IOException, NoSuchAlgorithmException, ServiceException {
+        store(file, holder.getFilesPath(), filename, holder.getFilesBucket());
     }
-  }
 
-  public String getUrl(final FileHolder holder, String filename) {
-    return getUrl(holder.getFilesPath(), filename, holder.getFilesBucket());
-  }
+    public void delete(final FileHolder holder, String filename) throws ServiceException {
+        if(filename != null) delete(holder.getFilesPath(), filename, holder.getFilesBucket());
+    }
+
+    public void delete(final FileHolder holder) throws ServiceException {
+        for (String fn : holder.getFileNames()) {
+            if(fn != null) delete(holder, fn);
+        }
+    }
+
+    public String getUrl(final FileHolder holder, String filename) {
+        return getUrl(holder.getFilesPath(), filename, holder.getFilesBucket());
+    }
 }

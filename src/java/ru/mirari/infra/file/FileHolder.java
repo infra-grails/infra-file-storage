@@ -7,9 +7,9 @@ import java.util.List;
  * @since 11/16/11 12:06 PM
  */
 public interface FileHolder {
-  String getFilesPath();
+    String getFilesPath();
 
-  String getFilesBucket();
+    String getFilesBucket();
 
-  List<String> getFileNames();
+    List<String> getFileNames();
 }
