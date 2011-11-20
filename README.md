@@ -24,9 +24,9 @@ Usage
 
 At first, after installation, you should assign your Config.groovy:
 
-    grails {
-        mirari {
-            fileStorage {
+    mirari {
+        infra {
+            file {
                 local {
                     localRoot = "./web-app/" // (optional) where to store local files
                     defaultBucket = "storage" // (optional) will appear as a folder in your localRoot

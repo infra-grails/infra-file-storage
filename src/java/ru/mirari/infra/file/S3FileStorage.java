@@ -29,9 +29,9 @@ public class S3FileStorage extends FileStoragePrototype {
 
   @Autowired
   S3FileStorage(GrailsApplication grailsApplication) throws S3ServiceException {
-    ConfigObject config = (ConfigObject)grailsApplication.getConfig().get("grails");
-    config = (ConfigObject)config.get("mirari");
-    config = (ConfigObject)config.get("fileStorage");
+    ConfigObject config = (ConfigObject)grailsApplication.getConfig().get("mirari");
+    config = (ConfigObject)config.get("infra");
+    config = (ConfigObject)config.get("file");
     Map s3Conf = ((ConfigObject)config.get("s3")).flatten();
 
     s3Service = new RestS3Service(
