@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.jets3t.service.S3ServiceException;
 import org.jets3t.service.ServiceException;
+import org.jets3t.service.acl.AccessControlList;
 import org.jets3t.service.impl.rest.httpclient.RestS3Service;
 import org.jets3t.service.model.S3Object;
 import org.jets3t.service.security.AWSCredentials;
@@ -50,10 +51,10 @@ public class S3FileStorage extends FileStoragePrototype {
     }
 
     public void store(final File file, String path, String filename, String bucket) throws IOException, NoSuchAlgorithmException, ServiceException {
-        org.jets3t.service.model.S3Object o = new S3Object(file);
+        S3Object o = new S3Object(file);
         o.setKey(buildObjectKey(path, filename == null || filename.isEmpty() ? file.getName() : filename));
         // TODO: file might have temporary address and be private
-        o.setAcl(org.jets3t.service.acl.AccessControlList.REST_CANNED_PUBLIC_READ);
+        o.setAcl(AccessControlList.REST_CANNED_PUBLIC_READ);
         s3Service.putObjectMaybeAsMultipart(getBucket(bucket), o, 5242880);
         log.info("Saved ${o.key} to s3 storage");
     }
@@ -80,7 +81,6 @@ public class S3FileStorage extends FileStoragePrototype {
     }
 
     private String getBucket(String bucket) {
-        if (bucket == null || bucket.isEmpty()) return bucket;
-        return defaultBucket;
+        return (bucket == null || bucket.isEmpty()) ? defaultBucket : bucket;
     }
 }

@@ -1,15 +1,15 @@
-<plugin name='mirari-infra-file' version='0.1' grailsVersion='2.0 &gt; *'>
-    <author>Dmitry Kurinskiy</author>
-    <authorEmail>name.alari@gmail.com</authorEmail>
-    <title>Mirari File Storage Plugin</title>
-    <description>Provides convenient methods to store files on local path in dev/test mode and on Amazon S3 on
+<plugin name='mirari-infra-file' version='0.1' grailsVersion='2.0.0.RC1 &gt; *'>
+  <author>Dmitry Kurinskiy</author>
+  <authorEmail>name.alari@gmail.com</authorEmail>
+  <title>Mirari File Storage Plugin</title>
+  <description>Provides convenient methods to store files on local path in dev/test mode and on Amazon S3 on
         production.
     </description>
-    <documentation>http://grails.org/plugin/mirari-infra-file</documentation>
-    <type>MirariInfraFileGrailsPlugin</type>
-    <resources>
-        <resource>ru.mirari.infra.FileStorageService</resource>
-    </resources>
-    <dependencies/>
-    <behavior/>
+  <documentation>http://grails.org/plugin/mirari-infra-file</documentation>
+  <type>MirariInfraFileGrailsPlugin</type>
+  <resources>
+    <resource>ru.mirari.infra.FileStorageService</resource>
+  </resources>
+  <dependencies />
+  <behavior />
 </plugin>
