@@ -8,4 +8,4 @@ out/
 .classpath
 .project
 .settings
-web-app/storage
+web-app
