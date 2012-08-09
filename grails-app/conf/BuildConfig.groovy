@@ -8,6 +8,7 @@ grails.project.dependency.resolution = {
     inherits("global") {
         // uncomment to disable ehcache
         // excludes 'ehcache'
+        excludes 'hibernate'
     }
     log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     repositories {
@@ -23,15 +24,15 @@ grails.project.dependency.resolution = {
         mavenRepo "http://www.jets3t.org/maven2"
     }
     dependencies {
-        compile "net.java.dev.jets3t:jets3t:0.8.1"
-        // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
-
-        // runtime 'mysql:mysql-connector-java:5.1.5'
+        compile "net.java.dev.jets3t:jets3t:latest.release"
+        compile('eu.medsea.mimeutil:mime-util:latest.release') {
+            exclude "slf4j-log4j12"
+        }
     }
 
     plugins {
         build(":tomcat:$grailsVersion",
-                ":release:1.0.0.RC3") {
+                ":release:latest.integration") {
             export = false
         }
     }

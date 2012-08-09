@@ -16,7 +16,7 @@ import java.util.Map;
 public class LocalFileStorage extends FileStoragePrototype {
 
     String defaultBucket = "storage";
-    String localRoot = "./web-app/";
+    String localRoot = "./web-app/f/";
     String urlRoot;
 
     @Autowired
@@ -30,7 +30,7 @@ public class LocalFileStorage extends FileStoragePrototype {
         defaultBucket = localConf.get("defaultBucket").toString();
         urlRoot = localConf.get("urlRoot").toString();
         if (urlRoot == null || urlRoot.isEmpty()) {
-            urlRoot = ((Map) grailsApplication.getConfig().get("grails")).get("serverURL").toString();
+            urlRoot = ((Map) grailsApplication.getConfig().get("grails")).get("serverURL").toString().concat("f/");
         }
         if (!urlRoot.endsWith("/")) {
             urlRoot = urlRoot.concat("/");

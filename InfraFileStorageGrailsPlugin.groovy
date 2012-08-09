@@ -3,7 +3,7 @@ import ru.mirari.infra.file.FileStorageHolder
 import ru.mirari.infra.file.LocalFileStorage
 import ru.mirari.infra.file.S3FileStorage
 
-class MirariInfraFileGrailsPlugin {
+class InfraFileStorageGrailsPlugin {
     // the plugin version
     def version = "0.1"
     // the version or versions of Grails the plugin is designed for
@@ -15,7 +15,6 @@ class MirariInfraFileGrailsPlugin {
             "grails-app/views/error.gsp"
     ]
 
-    // TODO Fill in these fields
     def title = "Mirari File Storage Plugin" // Headline display name of the plugin
     def author = "Dmitry Kurinskiy"
     def authorEmail = "name.alari@gmail.com"
@@ -24,7 +23,7 @@ Provides convenient methods to store files on local path in dev/test mode and on
 '''
 
     // URL to the plugin's documentation
-    def documentation = "http://grails.org/plugin/mirari-infra-file"
+    def documentation = "https://github.com/alari/infra-file-storage"
 
     // Extra (optional) plugin metadata
 
@@ -38,10 +37,10 @@ Provides convenient methods to store files on local path in dev/test mode and on
     //    def developers = [ [ name: "Joe Bloggs", email: "joe@bloggs.net" ]]
 
     // Location of the plugin's issue tracker.
-    def issueManagement = [system: "github", url: "https://github.com/alari/mirari-infra-file/issues"]
+    def issueManagement = [system: "github", url: "https://github.com/alari/infra-file-storage/issues"]
 
     // Online location of the plugin's browseable source code.
-    def scm = [url: "http://github.com/alari/mirari-infra-file"]
+    def scm = [url: "https://github.com/alari/infra-file-storage"]
 
     def doWithWebDescriptor = { xml ->
         // TODO Implement additions to web.xml (optional), this event occurs before
