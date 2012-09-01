@@ -40,10 +40,21 @@ public class S3FileStorage extends FileStoragePrototype {
 
     @Autowired
     S3FileStorage(GrailsApplication grailsApplication) throws S3ServiceException, CloudFrontServiceException {
-        ConfigObject config = (ConfigObject) grailsApplication.getConfig().get("mirari");
-        config = (ConfigObject) config.get("infra");
-        config = (ConfigObject) config.get("file");
-        Map s3Conf = ((ConfigObject) config.get("s3")).flatten();
+        ConfigObject config;
+        Map s3Conf;
+        try {
+            config = (ConfigObject) grailsApplication.getConfig().get("mirari");
+            config = (ConfigObject) config.get("infra");
+            config = (ConfigObject) config.get("file");
+            s3Conf = ((ConfigObject) config.get("s3")).flatten();
+        } catch (NullPointerException npe) {
+            defaultBucket = null;
+            urlRoot = null;
+            s3Service = null;
+            cloudFrontService = null;
+            buckets = null;
+            return;
+        }
 
         ProviderCredentials awsCredentials = new AWSCredentials(
                 s3Conf.get("accessKey").toString(),
