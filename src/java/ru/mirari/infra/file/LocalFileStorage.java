@@ -29,7 +29,7 @@ public class LocalFileStorage extends FileStoragePrototype {
             config = (ConfigObject) config.get("file");
             localConf = ((ConfigObject) config.get("local")).flatten();
         } catch (NullPointerException npe) {
-            urlRoot = ((Map) grailsApplication.getConfig().get("grails")).get("serverURL").toString().concat("f/");
+            urlRoot = ((Map) grailsApplication.getConfig().get("grails")).get("serverURL").toString().concat("/f/");
             return;
         }
 
@@ -37,7 +37,10 @@ public class LocalFileStorage extends FileStoragePrototype {
         defaultBucket = localConf.get("defaultBucket").toString();
         urlRoot = localConf.get("urlRoot").toString();
         if (urlRoot == null || urlRoot.isEmpty()) {
-            urlRoot = ((Map) grailsApplication.getConfig().get("grails")).get("serverURL").toString().concat("f/");
+            urlRoot = ((Map) grailsApplication.getConfig().get("grails")).get("serverURL").toString();
+            if(urlRoot.equals("{}")) urlRoot = "/";
+            if(!urlRoot.endsWith("/")) urlRoot = urlRoot.concat("/");
+            urlRoot = urlRoot.concat("f/");
         }
         if (!urlRoot.endsWith("/")) {
             urlRoot = urlRoot.concat("/");
