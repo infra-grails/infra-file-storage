@@ -1,5 +1,6 @@
 package ru.mirari.infra.file;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -12,4 +13,6 @@ public interface FileHolder {
     String getFilesBucket();
 
     List<String> getFileNames();
+
+    void setFileNames(Collection<String> names);
 }
