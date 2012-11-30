@@ -7,6 +7,7 @@ import eu.medsea.mimeutil.MimeUtil
  * @author alari
  * @since 2/4/12 7:46 PM
  */
+@Deprecated
 class FileInfo {
     private final File file
     private final MimeType mimeType

@@ -25,7 +25,6 @@
       <dependency group='org.jsoup' name='jsoup' version='latest.release' />
       <dependency group='rome' name='rome' version='latest.release' />
       <dependency group='org.codehaus.gpars' name='gpars' version='0.12' />
-      <dependency group='org.pegdown' name='pegdown' version='latest.release' />
     </compile>
     <runtime>
       <dependency group='stax' name='stax' version='1.2.0' />
