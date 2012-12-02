@@ -21,13 +21,12 @@ grails.project.dependency.resolution = {
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
         //mavenRepo "http://repository.jboss.com/maven2/"
+        mavenRepo "http://artifactory.dev/repo"
         mavenRepo "http://www.jets3t.org/maven2"
+        mavenCentral()
     }
     dependencies {
         compile "net.java.dev.jets3t:jets3t:latest.release"
-        compile('eu.medsea.mimeutil:mime-util:latest.release') {
-            exclude "slf4j-log4j12"
-        }
     }
 
     plugins {
