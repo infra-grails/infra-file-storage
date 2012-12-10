@@ -26,7 +26,7 @@ import java.util.Map;
  * @author alari
  * @since 11/16/11 12:53 PM
  */
-public class S3FileStorage extends FileStoragePrototype {
+public class S3FileStorage implements FileStorage {
     private final String defaultBucket;
     private final String urlRoot;
     private final Logger log = Logger.getLogger(S3FileStorage.class);

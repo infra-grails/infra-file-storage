@@ -13,15 +13,7 @@ import java.security.NoSuchAlgorithmException;
 public interface FileStorage {
     public void store(final File file, String path, String filename, String bucket) throws IOException, NoSuchAlgorithmException, ServiceException;
 
-    public void store(final File file, final FileHolder holder, String filename) throws IOException, NoSuchAlgorithmException, ServiceException;
-
     public void delete(String path, String filename, String bucket) throws ServiceException;
 
-    public void delete(final FileHolder holder, String filename) throws ServiceException;
-
-    public void delete(final FileHolder holder) throws ServiceException;
-
     public String getUrl(String path, String filename, String bucket);
-
-    public String getUrl(final FileHolder holder, String filename);
 }

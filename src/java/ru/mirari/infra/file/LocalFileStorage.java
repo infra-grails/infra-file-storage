@@ -13,7 +13,7 @@ import java.util.Map;
  * @author alari
  * @since 11/16/11 12:19 PM
  */
-public class LocalFileStorage extends FileStoragePrototype {
+public class LocalFileStorage implements FileStorage {
 
     String defaultBucket = "storage";
     String localRoot = "./web-app/f/";
@@ -30,11 +30,13 @@ public class LocalFileStorage extends FileStoragePrototype {
             localConf = ((ConfigObject) config.get("local")).flatten();
         } catch (NullPointerException npe) {
             urlRoot = ((Map) grailsApplication.getConfig().get("grails")).get("serverURL").toString().concat("/f/");
+            if(urlRoot.equals("{}/f/")) urlRoot = "/f/";
             return;
         }
 
         localRoot = localConf.get("localRoot").toString().isEmpty() ? localRoot : localConf.get("localRoot").toString();
         defaultBucket = localConf.get("defaultBucket").toString();
+
         urlRoot = localConf.get("urlRoot").toString();
         if (urlRoot == null || urlRoot.isEmpty()) {
             urlRoot = ((Map) grailsApplication.getConfig().get("grails")).get("serverURL").toString();
