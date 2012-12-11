@@ -13,10 +13,10 @@ import java.lang.annotation.Target
 @Target(ElementType.TYPE)
 public @interface FilesHolder {
     String bucket() default ""
+
     Class path()
 
-    Class fileNames() default {it.fileNames}
-    Class setFileNames() default {domain, fileNames -> domain.fileNames = fileNames}
+    String filesProperty() default "fileNames"
 
     String[] allowedExtensions() default [""]
 }

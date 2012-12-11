@@ -25,8 +25,8 @@ class LocalFileStorageSpec extends IntegrationSpec {
     }
 
     @FilesHolder(
-        path = {Holder holder -> "test/"+holder.id},
-        allowedExtensions = ["tmp"]
+    path = { Holder holder -> "test/" + holder.id },
+    allowedExtensions = ["tmp"]
     )
     private static class Holder {
         String id
@@ -49,6 +49,7 @@ class LocalFileStorageSpec extends IntegrationSpec {
         expect:
         fileStorageService != null
         new File(src).isFile() == false
+        fileStorageService.exists(holder, "test.tmp") == false
 
         when:
         fileStorageService.store(holder, file)
@@ -57,6 +58,7 @@ class LocalFileStorageSpec extends IntegrationSpec {
         holder.fileNames == ["test.tmp"]
         new File(src).isFile() == true
         new File(src).text == file.text
+        fileStorageService.exists(holder, "test.tmp") == true
         fileStorageService.getUrl(holder) == "/f/storage/test/0/test.tmp"
         fileStorageService.getUrl(holder, "test.tmp") == "/f/storage/test/0/test.tmp"
 
@@ -66,5 +68,6 @@ class LocalFileStorageSpec extends IntegrationSpec {
         then:
         !holder.fileNames
         new File(src).isFile() == false
+        fileStorageService.exists(holder, "test.tmp") == false
     }
 }

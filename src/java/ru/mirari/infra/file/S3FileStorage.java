@@ -15,6 +15,7 @@ import org.jets3t.service.model.cloudfront.Invalidation;
 import org.jets3t.service.security.AWSCredentials;
 import org.jets3t.service.security.ProviderCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +27,7 @@ import java.util.Map;
  * @author alari
  * @since 11/16/11 12:53 PM
  */
-public class S3FileStorage implements FileStorage {
+public class S3FileStorage extends FileStoragePrototype {
     private final String defaultBucket;
     private final String urlRoot;
     private final Logger log = Logger.getLogger(S3FileStorage.class);
@@ -87,20 +88,68 @@ public class S3FileStorage implements FileStorage {
         urlRoot = urlRootBuilder;
     }
 
+    @Override
+    public void store(final MultipartFile file, String path, String filename, String bucket) throws Exception {
+        if (filename == null || filename.isEmpty()) filename = file.getOriginalFilename();
+
+        S3Object o = new S3Object();
+        o.setKey(buildObjectKey(path, filename));
+        o.setAcl(AccessControlList.REST_CANNED_PUBLIC_READ);
+
+        // Pushing as stream
+        o.setDataInputStream(file.getInputStream());
+        o.setContentLength(file.getSize());
+        o.setContentType(file.getContentType());
+
+        bucket = getBucket(bucket);
+
+        s3Service.putObjectMaybeAsMultipart(bucket, o, 5242880);
+        log.info("Saved to s3 storage as stream: ".concat(o.getKey()));
+
+        invalidateCloudFront(o.getKey(), bucket);
+    }
+
+    @Override
     public void store(final File file, String path, String filename, String bucket) throws IOException, NoSuchAlgorithmException, ServiceException {
         S3Object o = new S3Object(file);
         o.setKey(buildObjectKey(path, filename == null || filename.isEmpty() ? file.getName() : filename));
-        // TODO: file might have temporary address and be private
+
         o.setAcl(AccessControlList.REST_CANNED_PUBLIC_READ);
 
         bucket = getBucket(bucket);
 
         s3Service.putObjectMaybeAsMultipart(bucket, o, 5242880);
-        log.info("Saved ${o.key} to s3 storage");
+        log.info("Saved ${o.key} to s3 storage: ".concat(o.getKey()));
 
         // Invalidate objects
+        invalidateCloudFront(o.getKey(), bucket);
+    }
+
+
+    @Override
+    public void delete(String path, String filename, String bucket) throws ServiceException {
+        s3Service.deleteObject(getBucket(bucket), buildObjectKey(path, filename));
+    }
+
+    @Override
+    public boolean exists(String path, String filename, String bucket) throws Exception {
+        return s3Service.isObjectInBucket(getBucket(bucket), buildObjectKey(path, filename));
+    }
+
+    @Override
+    public String getUrl(String path, String filename, String bucket) {
+        if (bucket == null || bucket.isEmpty() || bucket.equals(defaultBucket)) {
+            return urlRoot.concat(buildObjectKey(path, filename));
+        } else if (buckets.containsKey(bucket)) {
+            return buckets.get(bucket).concat(buildObjectKey(path, filename));
+        } else {
+            return "http://".concat(bucket).concat(urlRootSuffix).concat(buildObjectKey(path, filename));
+        }
+    }
+
+    private void invalidateCloudFront(final String objectKey, final String bucket) {
         try {
-            String[] objectKeys = new String[]{o.getKey()};
+            String[] objectKeys = new String[]{objectKey};
             Distribution[] bucketDistributions = cloudFrontService.listDistributions(bucket);
             for (Distribution bucketDistribution : bucketDistributions) {
                 Invalidation invalidation = cloudFrontService.invalidateObjects(
@@ -112,22 +161,6 @@ public class S3FileStorage implements FileStorage {
             }
         } catch (CloudFrontServiceException e) {
             log.error("Cannot invalidate object!", e);
-        }
-    }
-
-
-    public void delete(String path, String filename, String bucket) throws ServiceException {
-        s3Service.deleteObject(getBucket(bucket), buildObjectKey(path, filename));
-    }
-
-
-    public String getUrl(String path, String filename, String bucket) {
-        if (bucket == null || bucket.isEmpty() || bucket.equals(defaultBucket)) {
-            return urlRoot.concat(buildObjectKey(path, filename));
-        } else if (buckets.containsKey(bucket)) {
-            return buckets.get(bucket).concat(buildObjectKey(path, filename));
-        } else {
-            return "http://".concat(bucket).concat(urlRootSuffix).concat(buildObjectKey(path, filename));
         }
     }
 

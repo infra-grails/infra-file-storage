@@ -13,7 +13,7 @@ import java.util.Map;
  * @author alari
  * @since 11/16/11 12:19 PM
  */
-public class LocalFileStorage implements FileStorage {
+public class LocalFileStorage extends FileStoragePrototype {
 
     String defaultBucket = "storage";
     String localRoot = "./web-app/f/";
@@ -30,7 +30,7 @@ public class LocalFileStorage implements FileStorage {
             localConf = ((ConfigObject) config.get("local")).flatten();
         } catch (NullPointerException npe) {
             urlRoot = ((Map) grailsApplication.getConfig().get("grails")).get("serverURL").toString().concat("/f/");
-            if(urlRoot.equals("{}/f/")) urlRoot = "/f/";
+            if (urlRoot.equals("{}/f/")) urlRoot = "/f/";
             return;
         }
 
@@ -40,8 +40,8 @@ public class LocalFileStorage implements FileStorage {
         urlRoot = localConf.get("urlRoot").toString();
         if (urlRoot == null || urlRoot.isEmpty()) {
             urlRoot = ((Map) grailsApplication.getConfig().get("grails")).get("serverURL").toString();
-            if(urlRoot.equals("{}")) urlRoot = "/";
-            if(!urlRoot.endsWith("/")) urlRoot = urlRoot.concat("/");
+            if (urlRoot.equals("{}")) urlRoot = "/";
+            if (!urlRoot.endsWith("/")) urlRoot = urlRoot.concat("/");
             urlRoot = urlRoot.concat("f/");
         }
         if (!urlRoot.endsWith("/")) {
@@ -49,6 +49,7 @@ public class LocalFileStorage implements FileStorage {
         }
     }
 
+    @Override
     public void store(final File file, String path, String filename, String bucket) throws IOException {
         createDir(path, bucket);
         File newFile = new File(getFullLocalPath(path, filename.isEmpty() ? file.getName() : filename,
@@ -57,10 +58,17 @@ public class LocalFileStorage implements FileStorage {
         FileUtils.copyFile(file, newFile);
     }
 
+    @Override
     public void delete(String path, String filename, String bucket) {
         new File(getFullLocalPath(path, filename, bucket)).delete();
     }
 
+    @Override
+    public boolean exists(String path, String filename, String bucket) throws Exception {
+        return new File(getFullLocalPath(path, filename, bucket)).isFile();
+    }
+
+    @Override
     public String getUrl(String path, String filename, String bucket) {
         return urlRoot.concat(getFullPath(path, filename, bucket));
     }

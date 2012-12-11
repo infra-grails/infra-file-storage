@@ -1,5 +1,6 @@
 package ru.mirari.infra
 
+import org.springframework.web.multipart.MultipartFile
 import ru.mirari.infra.file.FileStorage
 import ru.mirari.infra.file.FilesHolder
 
@@ -9,26 +10,43 @@ class FileStorageService implements FileStorage {
 
     @Delegate FileStorage fileStorage
 
-    void store(def holder, final File file, String filename = null) {
-        FilesHolder filesHolder = getHolder(holder)
+    void store(def domain, final File file, String filename = null) {
+        FilesHolder filesHolder = getHolder(domain)
 
         if (!filename) filename = file.name
 
+        storeFile(filesHolder, domain, file, filename)
+    }
+
+    void store(def domain, final MultipartFile file, String filename = null) {
+        FilesHolder filesHolder = getHolder(domain)
+
+        if (!filename) filename = file.originalFilename
+
+        storeFile(filesHolder, domain, file, filename)
+    }
+
+    boolean exists(def domain, String filename) {
+        FilesHolder filesHolder = getHolder(domain)
+        fileStorage.exists(getPath(filesHolder, domain), filename, filesHolder.bucket())
+    }
+
+    private void storeFile(FilesHolder filesHolder, def domain, final def file, String filename) {
         checkFile(filesHolder, file)
 
-        fileStorage.store(file, getPath(filesHolder, holder), filename ?: "", filesHolder.bucket())
+        fileStorage.store(file, getPath(filesHolder, domain), filename ?: "", filesHolder.bucket())
 
-        List<String> fileNames = getFileNames(filesHolder, holder) ?: []
+        List<String> fileNames = getFileNames(filesHolder, domain) ?: []
         if (!fileNames.contains(filename)) fileNames.add(filename)
 
-        setFileNames(filesHolder, holder, fileNames)
+        setFileNames(filesHolder, domain, fileNames)
     }
 
     void delete(def domain) {
         FilesHolder holder = getHolder(domain)
         List<String> fileNames = getFileNames(holder, domain)
         if (fileNames) {
-            for(String filename : fileNames) {
+            for (String filename : fileNames) {
                 fileStorage.delete(getPath(holder, domain), filename, holder.bucket())
             }
         }
@@ -46,7 +64,7 @@ class FileStorageService implements FileStorage {
         setFileNames(holder, domain, fileNames)
     }
 
-    String getUrl(def domain, String filename=null) {
+    String getUrl(def domain, String filename = null) {
         FilesHolder holder = getHolder(domain)
         if (!filename) {
             List<String> fileNames = getFileNames(holder, domain)
@@ -59,11 +77,11 @@ class FileStorageService implements FileStorage {
     }
 
     private void setFileNames(FilesHolder holder, def domain, List<String> fileNames) {
-        holder.setFileNames().newInstance(domain, domain).call(domain, fileNames)
+        domain."${holder.filesProperty()}" = fileNames
     }
 
     private List<String> getFileNames(FilesHolder holder, final def domain) {
-        holder.fileNames().newInstance(domain, domain).call(domain)
+        domain."${holder.filesProperty()}"
     }
 
     private String getPath(FilesHolder holder, final def domain) {
@@ -72,7 +90,14 @@ class FileStorageService implements FileStorage {
     }
 
     private checkFile(final FilesHolder holder, final File file) {
-        String extension = file.name.substring(file.name.lastIndexOf(".")+1)
+        String extension = file.name.substring(file.name.lastIndexOf(".") + 1)
+        if (holder.allowedExtensions() && !(extension in holder.allowedExtensions())) {
+            throw new IllegalArgumentException("Wrong file extension")
+        }
+    }
+
+    private checkFile(final FilesHolder holder, final MultipartFile file) {
+        String extension = file.originalFilename.substring(file.originalFilename.lastIndexOf(".") + 1)
         if (holder.allowedExtensions() && !(extension in holder.allowedExtensions())) {
             throw new IllegalArgumentException("Wrong file extension")
         }
