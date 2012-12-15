@@ -1,79 +1,43 @@
 Grails plugin: infra-file-storage
 ====================
 
-Stores files on Amazon S3 when deployed, on localhost when testing/developing.
+Stores files on Amazon S3 (or another storage) when deployed, on localhost when testing/developing.
 
-Motivation
----------------------
-
-Commonly application uploads some files from users. It may be user photos, price lists, videos, whatever.
-During development phase, it's better to simply store files in a local directory. But on production it's possibly needed to
-store files in the cloud, on CDN, on another server, etc. If you don't need it now, you probably will in the future.
-
-This plugin provides you with a consistent API (using DI) to work with uploaded files in Grails. By default, it stores files
-locally on development, and on Amazon S3 (with CloudFront support) when deployed.
-
-You can store files, retrieve accessible file urls, update files with a single `fileStorageService` bean.
-
-Also, due to the common task of working with several
-files linked to a single object (e.g. domain), plugin provides `FileHolder` interface and shortcut methods.
+Plugin is devoted to become a platform solution to store files in Grails.
 
 Usage
 ---------------------
 
+Take a look on Spock Integration tests [tests/integration/infra/file/storage/]
+
+There are two ways to use plugin:
+
+- Use basic files holder, accessible with `fileStorageService.getHolder(path, bucket=null)`
+
+Example: get and save something
+
 ```groovy
-// inject a bean
-def fileStorageService
+    @Autowired
+    def fileStorageService
+     // ...
+    def holder = fileStorageService.getHolder("test")
+    holder.store((File)file)
+    assert holder.exists(file.name)
+    return holder.getUrl(file.name)
+```
 
-def storeSomething() {
-    // any file is identified with:
-    // - path (it may be domain-object-generated, like "post_files/${post.id}/")
-    // - [optional] file name (for concrete file)
-    // - [optional] bucket name (Amazon S3 bucket or similar config option for storage implementation)
-    File smth = new File()
-    fileStorageService.store(smth, "path/where/to/store", "filename_or_null", "bucketOrWorkspaceName_or_null")
+- Implement your own files mapping logic with `@FilesHolder` annotation ([src/groovy/ru/mirari/infra/file/FilesHolder.groovy])
 
-    String fullHttpUrl = fileStorageService.getUrl("path/where/to/store", "filename_or_null", "bucketOrWorkspaceName_or_null")
+Example: files holder domain class
 
-    fileStorageService.delete("path/where/to/store", "filename_or_null", "bucketOrWorkspaceName_or_null")
-}
-
-// or you may implement FileHolder interface to ease working with files
-class Post implements FileHolder {
-    // Store file names some way, e.g. in Mongo embedded list, or serialized, or ghm
-    List<String> fileNames = []
-
-    // Each post has its own path
-    String getFilesPath() {"post_files/${id}"}
-
-    // Posts files are stored in default bucket
-    String getFilesBucket() {null}
-}
-
-def storePostFile(File f, Post p) {
-    fileStorageService.store(f, p, null)
-    p.fileNames[] = f.name
-
-    fileStorageService.getUrl(p, f.name)
-    fileStorageService.delete(p)
+```groovy
+@FilesHolder(path={id})
+DomainHolder {
+    static hasMany = [fileNames: String]
 }
 ```
 
-Installation
----------------------
 
-Clone plugin sources (you may fork it at first, and that'll be great) and set sources directory in `BuildConfig
-.groovy`:
-
-    grails.plugin.location.'infra-file-storage' = "infra-file-storage"
-
-You will need valid S3 credentials to deploy the plugin.
-
-And notice: you shouldn't call `grails install-plugin` or add direct dependency to `BuildConfig.groovy`!
-
-Otherwise, you may download packaged version of the plugin and call
-
-`grails install-plugin infra-file-storage.0.1.zip`
 
 Configuration
 ---------------------
@@ -110,3 +74,13 @@ If you want to change environment-specified behaviour of file storage, override 
         storage = ref(Environment.isWarDeployed() ? "s3FileStorage" : "localFileStorage")
     }
 ```
+
+TODOs
+-----------------------
+
+- Create basic taglibs to retrieve files
+
+Companion plugins
+-----------------------
+
+[Images Storage & Resizing](https://github.com/alari/infra-images)
