@@ -1,7 +1,7 @@
 Grails plugin: infra-file-storage
 ====================
 
-Stores files on Amazon S3 (or another storage) when deployed, on localhost when testing/developing.
+Stores files on Amazon S3 (or another storage) when deployed, and in a plain directory during testing/developing.
 
 Plugin is devoted to become a platform solution to store files in Grails.
 
@@ -77,6 +77,7 @@ TODOs
 -----------------------
 
 - Create basic taglibs to retrieve files
+- Add support for plain local storage on deployment (currently not handling root folder well, not tested)
 - Substitute particular storage strategies (s3, rackspace, ...) into separate plugins to clean build dependencies
 
 Companion plugins
