@@ -8,7 +8,7 @@ Plugin is devoted to become a platform solution to store files in Grails.
 Usage
 ---------------------
 
-Take a look on Spock Integration tests [tests/integration/infra/file/storage/]
+Take a look on [Spock Integration tests](https://github.com/alari/infra-file-storage/tree/master/test/integration/infra/file/storage)
 
 There are two ways to use plugin:
 
@@ -37,12 +37,10 @@ DomainHolder {
 }
 ```
 
-
-
 Configuration
 ---------------------
 
-At first, after installation, you should assign your Config.groovy:
+At first, you should assign your Config.groovy:
 
 ``` groovy
     mirari {
@@ -64,7 +62,7 @@ At first, after installation, you should assign your Config.groovy:
     }
 ```
 
-Then just use `fileStorageService` or `fileStorage` Spring bean to store your files.
+Then just use `fileStorageService` Spring bean to manage your files.
 
 If you want to change environment-specified behaviour of file storage, override `fileStorage` Spring bean in `resources.groovy`:
 
@@ -79,6 +77,7 @@ TODOs
 -----------------------
 
 - Create basic taglibs to retrieve files
+- Substitute particular storage strategies (s3, rackspace, ...) into separate plugins to clean build dependencies
 
 Companion plugins
 -----------------------
