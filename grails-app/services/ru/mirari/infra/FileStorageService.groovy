@@ -136,7 +136,7 @@ class FileStorageService implements FileStorage {
     path = { path },
     bucket = { bucket }
     )
-    private class BasicFilesHolder {
+    public class BasicFilesHolder {
         /**
          * Path where to store files -- must be unique for each holder
          */
