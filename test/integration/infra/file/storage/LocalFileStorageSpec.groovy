@@ -21,7 +21,7 @@ class LocalFileStorageSpec extends IntegrationSpec {
     }
 
     def cleanup() {
-        new File("web-app/f").deleteDir()
+        //new File("web-app/f").deleteDir()
     }
 
     @FilesHolder(

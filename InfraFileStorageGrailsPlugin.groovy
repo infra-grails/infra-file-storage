@@ -1,5 +1,6 @@
 import grails.util.Environment
 import ru.mirari.infra.file.FileStorageHolder
+import ru.mirari.infra.file.FilesHolderHelper
 import ru.mirari.infra.file.LocalFileStorage
 import ru.mirari.infra.file.S3FileStorage
 
@@ -52,6 +53,7 @@ Provides convenient methods to store files on local path in dev/test mode and on
         fileStorage(FileStorageHolder) {
             storage = ref(Environment.isWarDeployed() ? "s3FileStorage" : "localFileStorage")
         }
+        filesHolderHelper(FilesHolderHelper)
     }
 
     def doWithDynamicMethods = { ctx ->

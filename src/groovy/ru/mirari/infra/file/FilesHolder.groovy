@@ -12,11 +12,11 @@ import java.lang.annotation.Target
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface FilesHolder {
-    String bucket() default ""
+    Class bucket() default {}
 
     Class path()
 
     String filesProperty() default "fileNames"
 
-    String[] allowedExtensions() default [""]
+    String[] allowedExtensions() default []
 }

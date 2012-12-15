@@ -54,7 +54,6 @@ public class LocalFileStorage extends FileStoragePrototype {
         createDir(path, bucket);
         File newFile = new File(getFullLocalPath(path, filename.isEmpty() ? file.getName() : filename,
                 bucket));
-
         FileUtils.copyFile(file, newFile);
     }
 
@@ -85,7 +84,6 @@ public class LocalFileStorage extends FileStoragePrototype {
 
         if (!fullPath.endsWith("/")) fullPath = fullPath.concat("/");
         fullPath = fullPath.concat(filename);
-
         return fullPath;
     }
 
