@@ -61,7 +61,7 @@ class FileStorageService implements FileStorage {
 
         fileStorage.store(file, filesHolderHelper.getPath(holder, domain), filename ?: "", filesHolderHelper.getBucket(holder, domain))
 
-        List<String> fileNames = filesHolderHelper.getFileNames(holder, domain) ?: []
+        Collection<String> fileNames = filesHolderHelper.getFileNames(holder, domain) ?: []
         if (!fileNames.contains(filename)) fileNames.add(filename)
 
         filesHolderHelper.setFileNames(holder, domain, fileNames)
@@ -74,7 +74,7 @@ class FileStorageService implements FileStorage {
      */
     void delete(def domain) {
         FilesHolder holder = filesHolderHelper.getHolder(domain)
-        List<String> fileNames = filesHolderHelper.getFileNames(holder, domain)
+        Collection<String> fileNames = filesHolderHelper.getFileNames(holder, domain)
         if (fileNames) {
             for (String filename : fileNames) {
                 fileStorage.delete(filesHolderHelper.getPath(holder, domain), filename, filesHolderHelper.getBucket(holder, domain))
@@ -91,7 +91,7 @@ class FileStorageService implements FileStorage {
      */
     void delete(def domain, String filename) {
         FilesHolder holder = filesHolderHelper.getHolder(domain)
-        List<String> fileNames = filesHolderHelper.getFileNames(holder, domain)
+        Collection<String> fileNames = filesHolderHelper.getFileNames(holder, domain)
 
         if (filename in fileNames) {
             fileStorage.delete(filesHolderHelper.getPath(holder, domain), filename, filesHolderHelper.getBucket(holder, domain))
@@ -110,7 +110,7 @@ class FileStorageService implements FileStorage {
     String getUrl(def domain, String filename = null) {
         FilesHolder holder = filesHolderHelper.getHolder(domain)
         if (!filename) {
-            List<String> fileNames = filesHolderHelper.getFileNames(holder, domain)
+            Collection<String> fileNames = filesHolderHelper.getFileNames(holder, domain)
             if (fileNames.size() == 1) filename = fileNames.first()
         }
         if (!filename) {
@@ -148,7 +148,7 @@ class FileStorageService implements FileStorage {
         /**
          * List of currently stored filenames
          */
-        List<String> fileNames = []
+        Collection<String> fileNames = []
 
         /**
          * Builds a holder for a unique path

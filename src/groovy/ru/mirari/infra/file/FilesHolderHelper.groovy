@@ -7,11 +7,11 @@ import org.springframework.web.multipart.MultipartFile
  * @since 12/16/12 1:02 AM
  */
 class FilesHolderHelper {
-    void setFileNames(FilesHolder holder, def domain, List<String> fileNames) {
+    void setFileNames(FilesHolder holder, def domain, Collection<String> fileNames) {
         domain."${holder.filesProperty()}" = fileNames
     }
 
-    List<String> getFileNames(FilesHolder holder, final def domain) {
+    Collection<String> getFileNames(FilesHolder holder, final def domain) {
         domain."${holder.filesProperty()}"
     }
 
