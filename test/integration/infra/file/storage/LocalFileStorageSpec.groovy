@@ -25,7 +25,11 @@ class LocalFileStorageSpec extends IntegrationSpec {
     }
 
     @FilesHolder(
-    path = { Holder holder -> "test/" + holder.id },
+    path = {
+        System.out.println "there"
+        assert id
+        "test/" + id
+    },
     allowedExtensions = ["tmp"]
     )
     private static class Holder {
@@ -49,6 +53,7 @@ class LocalFileStorageSpec extends IntegrationSpec {
         expect:
         fileStorageService != null
         new File(src).isFile() == false
+        holder != null
         fileStorageService.exists(holder, "test.tmp") == false
 
         when:

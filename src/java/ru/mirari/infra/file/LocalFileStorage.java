@@ -4,6 +4,7 @@ import groovy.util.ConfigObject;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.util.Map;
  * @author alari
  * @since 11/16/11 12:19 PM
  */
+@Component
 public class LocalFileStorage extends FileStoragePrototype {
 
     String defaultBucket = "storage";
@@ -50,11 +52,13 @@ public class LocalFileStorage extends FileStoragePrototype {
     }
 
     @Override
-    public void store(final File file, String path, String filename, String bucket) throws IOException {
+    public String store(final File file, String path, String filename, String bucket) throws IOException {
         createDir(path, bucket);
-        File newFile = new File(getFullLocalPath(path, filename.isEmpty() ? file.getName() : filename,
+        File newFile = new File(getFullLocalPath(path, (filename == null || filename.isEmpty()) ? file.getName() : filename,
                 bucket));
         FileUtils.copyFile(file, newFile);
+
+        return newFile.getName();
     }
 
     @Override

@@ -25,6 +25,12 @@ public @interface FilesHolder {
     Class path()
 
     /**
+     * The name of storage to store to
+     * @return
+     */
+    Class storage() default {}
+
+    /**
      * What List<String> property of an annotated domain object to read and write file names to
      * @return
      */

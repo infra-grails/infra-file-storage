@@ -1,9 +1,3 @@
-import grails.util.Environment
-import ru.mirari.infra.file.FileStorageHolder
-import ru.mirari.infra.file.FilesHolderHelper
-import ru.mirari.infra.file.LocalFileStorage
-import ru.mirari.infra.file.S3FileStorage
-
 class InfraFileStorageGrailsPlugin {
     // the plugin version
     def version = "0.2"
@@ -48,12 +42,8 @@ Provides convenient methods to store files on local path in dev/test mode and on
     }
 
     def doWithSpring = {
-        s3FileStorage(S3FileStorage)
-        localFileStorage(LocalFileStorage)
-        fileStorage(FileStorageHolder) {
-            storage = ref(Environment.isWarDeployed() ? "s3FileStorage" : "localFileStorage")
-        }
-        filesHolderHelper(FilesHolderHelper)
+        xmlns context:"http://www.springframework.org/schema/context"
+        context.'component-scan'('base-package': "ru.mirari.infra.file")
     }
 
     def doWithDynamicMethods = { ctx ->

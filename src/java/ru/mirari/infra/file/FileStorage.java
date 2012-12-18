@@ -10,15 +10,23 @@ import java.io.File;
  */
 public interface FileStorage {
     /**
+     * Name of file storage as it's used in config
+     *
+     * @return
+     */
+    public String getName();
+
+    /**
      * Stores a multipart file, identified by path and filename, in a bucket storage
      *
      * @param file
      * @param path
      * @param filename
      * @param bucket
+     * @return actual stored filename
      * @throws Exception
      */
-    public void store(final MultipartFile file, String path, String filename, String bucket) throws Exception;
+    public String store(final MultipartFile file, String path, String filename, String bucket) throws Exception;
 
     /**
      * Stores a file, identified by path and filename, in a bucket storage
@@ -27,9 +35,10 @@ public interface FileStorage {
      * @param path
      * @param filename
      * @param bucket
+     * @return actual stored filename
      * @throws Exception
      */
-    public void store(final File file, String path, String filename, String bucket) throws Exception;
+    public String store(final File file, String path, String filename, String bucket) throws Exception;
 
     /**
      * Deletes a file

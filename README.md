@@ -64,18 +64,13 @@ At first, you should assign your Config.groovy:
 
 Then just use `fileStorageService` Spring bean to manage your files.
 
-If you want to change environment-specified behaviour of file storage, override `fileStorage` Spring bean in `resources.groovy`:
-
-
-```groovy
-    fileStorage(FileStorageHolder) {
-        storage = ref(Environment.isWarDeployed() ? "s3FileStorage" : "localFileStorage")
-    }
-```
+If you want to change environment-specified behaviour of file storage, overwrite `deployedStorageName` and/or
+`deployedStorageName` bean values of `fileStorageService.groovy`:
 
 TODOs
 -----------------------
 
+- Make configuration simple and more convenient
 - Create basic taglibs to retrieve files
 - Add support for plain local storage on deployment (currently not handling root folder well, not tested)
 - Substitute particular storage strategies (s3, rackspace, ...) into separate plugins to clean build dependencies

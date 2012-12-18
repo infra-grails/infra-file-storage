@@ -15,6 +15,7 @@ import org.jets3t.service.model.cloudfront.Invalidation;
 import org.jets3t.service.security.AWSCredentials;
 import org.jets3t.service.security.ProviderCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -27,6 +28,7 @@ import java.util.Map;
  * @author alari
  * @since 11/16/11 12:53 PM
  */
+@Component
 public class S3FileStorage extends FileStoragePrototype {
     private final String defaultBucket;
     private final String urlRoot;
@@ -89,7 +91,7 @@ public class S3FileStorage extends FileStoragePrototype {
     }
 
     @Override
-    public void store(final MultipartFile file, String path, String filename, String bucket) throws Exception {
+    public String store(final MultipartFile file, String path, String filename, String bucket) throws Exception {
         if (filename == null || filename.isEmpty()) filename = file.getOriginalFilename();
 
         S3Object o = new S3Object();
@@ -107,10 +109,12 @@ public class S3FileStorage extends FileStoragePrototype {
         log.info("Saved to s3 storage as stream: ".concat(o.getKey()));
 
         invalidateCloudFront(o.getKey(), bucket);
+
+        return filename;
     }
 
     @Override
-    public void store(final File file, String path, String filename, String bucket) throws IOException, NoSuchAlgorithmException, ServiceException {
+    public String store(final File file, String path, String filename, String bucket) throws IOException, NoSuchAlgorithmException, ServiceException {
         S3Object o = new S3Object(file);
         o.setKey(buildObjectKey(path, filename == null || filename.isEmpty() ? file.getName() : filename));
 
@@ -123,6 +127,8 @@ public class S3FileStorage extends FileStoragePrototype {
 
         // Invalidate objects
         invalidateCloudFront(o.getKey(), bucket);
+
+        return filename;
     }
 
 
