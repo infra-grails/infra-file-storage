@@ -27,16 +27,20 @@ grails.project.dependency.resolution = {
     }
     dependencies {
         compile "net.java.dev.jets3t:jets3t:latest.release"
+
+        test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
     }
 
     plugins {
         build(":tomcat:$grailsVersion",
-                ":release:latest.integration") {
+                ":release:latest.release") {
             export = false
         }
 
-        test(":spock:0.7") {
-            export = false
+        //compile ":platform-core:latest.release"
+
+        test(":spock:latest.release") {
+            exclude "spock-grails-support"
         }
     }
 }

@@ -43,9 +43,7 @@ Configuration
 At first, you should assign your Config.groovy:
 
 ``` groovy
-    mirari {
-        infra {
-            file {
+    plugin.infraFileStorage {
                 local {
                     localRoot = "./web-app/" // (optional) where to store local files
                     defaultBucket = "storage" // (optional) will appear as a folder in your localRoot
@@ -56,6 +54,9 @@ At first, you should assign your Config.groovy:
                     accessKey = "ACCESS KEY"
                     secretKey = "SECRET KEY"
                     urlRoot = "http://statics.example.com/" // (optional) This will be used to make URLs for your files
+                    buckets { // optional
+                        bucketName = "http://customUrlRoot"
+                    }
                 }
             }
         }
@@ -70,10 +71,11 @@ If you want to change environment-specified behaviour of file storage, overwrite
 TODOs
 -----------------------
 
-- Make configuration simple and more convenient
+- Make `@FileHolder` annotation for single file holding
 - Create basic taglibs to retrieve files
 - Add support for plain local storage on deployment (currently not handling root folder well, not tested)
-- Substitute particular storage strategies (s3, rackspace, ...) into separate plugins to clean build dependencies
+- Substitute particular storage strategies (s3, rackspace, mongo, ...) into separate plugins to clean build dependencies
+- Make `@FileField` annotation
 
 Companion plugins
 -----------------------

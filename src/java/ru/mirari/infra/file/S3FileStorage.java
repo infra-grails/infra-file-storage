@@ -46,9 +46,8 @@ public class S3FileStorage extends FileStoragePrototype {
         ConfigObject config;
         Map s3Conf;
         try {
-            config = (ConfigObject) grailsApplication.getConfig().get("mirari");
-            config = (ConfigObject) config.get("infra");
-            config = (ConfigObject) config.get("file");
+            config = (ConfigObject) grailsApplication.getConfig().get("plugin");
+            config = (ConfigObject) config.get("infraFileStorage");
             s3Conf = ((ConfigObject) config.get("s3")).flatten();
         } catch (NullPointerException npe) {
             defaultBucket = null;

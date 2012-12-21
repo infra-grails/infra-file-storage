@@ -26,9 +26,8 @@ public class LocalFileStorage extends FileStoragePrototype {
         Map localConf;
         ConfigObject config;
         try {
-            config = (ConfigObject) grailsApplication.getConfig().get("mirari");
-            config = (ConfigObject) config.get("infra");
-            config = (ConfigObject) config.get("file");
+            config = (ConfigObject) grailsApplication.getConfig().get("plugin");
+            config = (ConfigObject) config.get("infraFileStorage");
             localConf = ((ConfigObject) config.get("local")).flatten();
         } catch (NullPointerException npe) {
             urlRoot = ((Map) grailsApplication.getConfig().get("grails")).get("serverURL").toString().concat("/f/");
