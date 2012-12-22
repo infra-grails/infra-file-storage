@@ -1,6 +1,6 @@
 class InfraFileStorageGrailsPlugin {
     // the plugin version
-    def version = "0.2"
+    def version = "0.2-SNAPSHOT"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "2.0 > *"
     // the other plugins this plugin depends on
@@ -10,7 +10,7 @@ class InfraFileStorageGrailsPlugin {
             "grails-app/views/error.gsp"
     ]
 
-    def title = "Mirari File Storage Plugin" // Headline display name of the plugin
+    def title = "Infra File Storage Plugin" // Headline display name of the plugin
     def author = "Dmitry Kurinskiy"
     def authorEmail = "name.alari@gmail.com"
     def description = '''\

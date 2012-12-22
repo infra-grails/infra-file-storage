@@ -3,6 +3,21 @@ grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir = "target/test-reports"
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
 
+grails.project.repos.default = "internal-snapshot"
+
+grails.project.dependency.distribution = {
+
+    String serverRoot = "http://artifactory.dev/"
+
+    remoteRepository(id: 'internal-snapshot', url: serverRoot + '/plugins-snapshot-local/') {
+        authentication username: 'admin', password: 'password'
+    }
+
+    remoteRepository(id: 'internal-release', url: serverRoot + '/plugins-release-local/') {
+        authentication username: 'admin', password: 'password'
+    }
+}
+
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
     inherits("global") {
@@ -16,12 +31,13 @@ grails.project.dependency.resolution = {
         // uncomment the below to enable remote dependency resolution
         // from public Maven repositories
         //mavenCentral()
-        //mavenLocal()
+        mavenLocal()
         //mavenRepo "http://snapshots.repository.codehaus.org"
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
         //mavenRepo "http://repository.jboss.com/maven2/"
         mavenRepo "http://artifactory.dev/repo"
+        grailsRepo "http://artifactory.dev/repo", "dev"
         mavenRepo "http://www.jets3t.org/maven2"
         mavenCentral()
     }
