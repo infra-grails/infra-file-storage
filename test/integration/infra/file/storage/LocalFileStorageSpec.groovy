@@ -26,7 +26,6 @@ class LocalFileStorageSpec extends IntegrationSpec {
 
     @FilesHolder(
     path = {
-        System.out.println "there"
         assert id
         "test/" + id
     },
