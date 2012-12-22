@@ -4,7 +4,7 @@ import grails.util.Environment
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.web.multipart.MultipartFile
-import ru.mirari.infra.file.AnnotationWrapperFilesHolder
+import ru.mirari.infra.file.AnnotatedFilesHolder
 import ru.mirari.infra.file.BasicFilesHolder
 import ru.mirari.infra.file.FileStorage
 
@@ -110,7 +110,7 @@ class FileStorageService implements ApplicationContextAware {
      * @param domain
      * @return
      */
-    AnnotationWrapperFilesHolder getHolder(def domain) {
-        new AnnotationWrapperFilesHolder(domain, this)
+    AnnotatedFilesHolder getHolder(def domain) {
+        new AnnotatedFilesHolder(domain, this, null)
     }
 }

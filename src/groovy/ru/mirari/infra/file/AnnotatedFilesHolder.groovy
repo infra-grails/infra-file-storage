@@ -15,11 +15,11 @@ class AnnotatedFilesHolder extends AbstractFilesHolder {
 
     AnnotatedFilesHolder(def domain, FileStorageService fileStorageService, FilesHolder holder) {
         this.domain = domain
-        this.holder = holder ?: domain.class.getAnnotation(FilesHolder)
+        this.holder = holder instanceof FilesHolder ? holder : domain.class.getAnnotation(FilesHolder)
 
-        propertyName = holder.filesProperty()
+        propertyName = this.holder.filesProperty()
 
-        final String storageName = ((Closure<String>) holder.storage().newInstance(domain, domain)).call()
+        final String storageName = ((Closure<String>) this.holder.storage().newInstance(domain, domain)).call()
         storage = fileStorageService.getFileStorage(storageName)
     }
 
