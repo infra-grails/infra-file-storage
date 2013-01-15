@@ -3,7 +3,6 @@ package infra.file.storage
 import grails.plugin.spock.IntegrationSpec
 import org.springframework.core.io.ClassPathResource
 import ru.mirari.infra.FileStorageService
-import ru.mirari.infra.file.FilesHolder
 import spock.lang.Stepwise
 
 /**
@@ -51,18 +50,18 @@ class LocalFileStorageSpec extends IntegrationSpec {
 
         expect:
         fileStorageService != null
-        new File(src).isFile() == false
+        !new File(src).isFile()
         holder != null
-        fileStorageService.exists(holder, "test.tmp") == false
+        !fileStorageService.exists(holder, "test.tmp")
 
         when:
         fileStorageService.store(holder, file)
 
         then:
         holder.fileNames == ["test.tmp"]
-        new File(src).isFile() == true
+        new File(src).isFile()
         new File(src).text == file.text
-        fileStorageService.exists(holder, "test.tmp") == true
+        fileStorageService.exists(holder, "test.tmp")
         fileStorageService.getUrl(holder) == "/f/storage/test/0/test.tmp"
         fileStorageService.getUrl(holder, "test.tmp") == "/f/storage/test/0/test.tmp"
 
@@ -71,7 +70,7 @@ class LocalFileStorageSpec extends IntegrationSpec {
 
         then:
         !holder.fileNames
-        new File(src).isFile() == false
-        fileStorageService.exists(holder, "test.tmp") == false
+        !new File(src).isFile()
+        !fileStorageService.exists(holder, "test.tmp")
     }
 }

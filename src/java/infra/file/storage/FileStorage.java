@@ -1,4 +1,4 @@
-package ru.mirari.infra.file;
+package infra.file.storage;
 
 import org.springframework.web.multipart.MultipartFile;
 

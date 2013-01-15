@@ -1,4 +1,4 @@
-package ru.mirari.infra.file
+package infra.file.storage
 
 import org.springframework.web.multipart.MultipartFile
 
@@ -6,18 +6,7 @@ import org.springframework.web.multipart.MultipartFile
  * @author alari
  * @since 12/18/12 6:16 PM
  */
-abstract class AbstractFilesHolder {
-    abstract protected FileStorage getStorage()
-
-    abstract public String getPath()
-
-    abstract public String getBucket()
-
-    abstract public Collection<String> getFileNames()
-
-    abstract public void setFileNames(Collection<String> fileNames)
-
-    abstract public String[] getAllowedExtensions()
+abstract class AbstractFilesManager implements FilesManager {
 
     /**
      * Returns an accessible url for a file
@@ -66,20 +55,26 @@ abstract class AbstractFilesHolder {
      * Stores a regular file for holder
      * @param file
      * @param filename
+     * @return actual filename
      */
-    void store(File file, String filename = null) {
+    String store(File file, String filename = null) {
         checkFile(file)
-        fileNames.add storage.store(file, path, filename, bucket)
+        filename = storage.store(file, path, filename, bucket)
+        fileNames.add filename
+        filename
     }
 
     /**
      * Stores a file for multipart request
      * @param file
      * @param filename
+     * @return actual filename
      */
-    void store(MultipartFile file, String filename = null) {
+    String store(MultipartFile file, String filename = null) {
         checkFile(file)
-        fileNames.add storage.store(file, path, filename, bucket)
+        filename = storage.store(file, path, filename, bucket)
+        fileNames.add filename
+        filename
     }
 
     private void checkFile(final MultipartFile file) {

@@ -1,19 +1,18 @@
-package ru.mirari.infra.file
-
+package infra.file.storage
 /**
  * @author alari
  * @since 12/18/12 6:44 PM
  */
-class BasicFilesHolder extends AbstractFilesHolder {
+class BasicFilesManager extends AbstractFilesManager {
 
     private final FileStorage storage
 
     @Override
-    protected FileStorage getStorage() {
+    FileStorage getStorage() {
         storage
     }
 
-    BasicFilesHolder(FileStorage storage, String path, String bucket = null) {
+    BasicFilesManager(FileStorage storage, String path, String bucket = null) {
         this.path = path
         this.bucket = bucket
         this.storage = storage

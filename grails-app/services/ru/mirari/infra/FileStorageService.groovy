@@ -1,12 +1,10 @@
 package ru.mirari.infra
 
 import grails.util.Environment
+import infra.file.storage.*
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.web.multipart.MultipartFile
-import ru.mirari.infra.file.AnnotatedFilesHolder
-import ru.mirari.infra.file.BasicFilesHolder
-import ru.mirari.infra.file.FileStorage
 
 class FileStorageService implements ApplicationContextAware {
 
@@ -39,7 +37,7 @@ class FileStorageService implements ApplicationContextAware {
      * @param filename
      */
     void store(def domain, final File file, String filename = null) {
-        getHolder(domain).store(file, filename)
+        getManager(domain).store(file, filename)
     }
 
     /**
@@ -50,7 +48,7 @@ class FileStorageService implements ApplicationContextAware {
      * @param filename
      */
     void store(def domain, final MultipartFile file, String filename = null) {
-        getHolder(domain).store(file, filename)
+        getManager(domain).store(file, filename)
     }
 
     /**
@@ -61,7 +59,7 @@ class FileStorageService implements ApplicationContextAware {
      * @return
      */
     boolean exists(def domain, String filename) {
-        getHolder(domain).exists(filename)
+        getManager(domain).exists(filename)
     }
 
     /**
@@ -70,7 +68,7 @@ class FileStorageService implements ApplicationContextAware {
      * @param domain
      */
     void delete(def domain) {
-        getHolder(domain).delete()
+        getManager(domain).delete()
     }
 
     /**
@@ -80,7 +78,7 @@ class FileStorageService implements ApplicationContextAware {
      * @param filename
      */
     void delete(def domain, String filename) {
-        getHolder(domain).delete(filename)
+        getManager(domain).delete(filename)
     }
 
     /**
@@ -91,7 +89,7 @@ class FileStorageService implements ApplicationContextAware {
      * @return
      */
     String getUrl(def domain, String filename = null) {
-        getHolder(domain).getUrl(filename)
+        getManager(domain).getUrl(filename)
     }
 
     /**
@@ -100,8 +98,10 @@ class FileStorageService implements ApplicationContextAware {
      * @param bucket
      * @return
      */
-    BasicFilesHolder getHolder(String path, String bucket = null) {
-        new BasicFilesHolder(defaultStorage, path, bucket)
+    FilesManager getManager(String path, String bucket = null, boolean domainFiles = false) {
+        FilesManager m = new BasicFilesManager(defaultStorage, path, bucket)
+        if (domainFiles) m = new DomainFilesManager(m)
+        m
     }
 
     /**
@@ -110,7 +110,9 @@ class FileStorageService implements ApplicationContextAware {
      * @param domain
      * @return
      */
-    AnnotatedFilesHolder getHolder(def domain) {
-        new AnnotatedFilesHolder(domain, this, null)
+    FilesManager getManager(def domain, boolean domainFiles = false) {
+        FilesManager m = new AnnotatedFilesManager(domain, this, null)
+        if (domainFiles) m = new DomainFilesManager(m)
+        m
     }
 }

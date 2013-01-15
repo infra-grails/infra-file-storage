@@ -19,25 +19,8 @@ environments {
     }
     test {
         dataSource {
-            dbCreate = "update"
+            dbCreate = "create-drop"
             url = "jdbc:h2:mem:testDb;MVCC=TRUE"
-        }
-    }
-    production {
-        dataSource {
-            dbCreate = "update"
-            url = "jdbc:h2:prodDb;MVCC=TRUE"
-            // For MySQL production scenarios enable the following settings
-            //          pooled = true
-            //          properties {
-            //               minEvictableIdleTimeMillis=1800000
-            //               timeBetweenEvictionRunsMillis=1800000
-            //               numTestsPerEvictionRun=3
-            //               testOnBorrow=true
-            //               testWhileIdle=true
-            //               testOnReturn=true
-            //               validationQuery="SELECT 1"
-            //          }
         }
     }
 }

@@ -42,8 +42,8 @@ Provides convenient methods to store files on local path in dev/test mode and on
     }
 
     def doWithSpring = {
-        xmlns context:"http://www.springframework.org/schema/context"
-        context.'component-scan'('base-package': "ru.mirari.infra.file")
+        xmlns context: "http://www.springframework.org/schema/context"
+        context.'component-scan'('base-package': "infra.file.storage")
     }
 
     def doWithDynamicMethods = { ctx ->

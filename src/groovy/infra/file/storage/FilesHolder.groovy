@@ -1,4 +1,4 @@
-package ru.mirari.infra.file
+package infra.file.storage
 
 import java.lang.annotation.ElementType
 import java.lang.annotation.Retention
