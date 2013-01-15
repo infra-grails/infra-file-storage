@@ -6,7 +6,6 @@ grails.project.test.reports.dir = "target/test-reports"
 grails.project.repos.default = "quonb-snapshot"
 
 grails.project.dependency.distribution = {
-
     String serverRoot = "http://mvn.quonb.org"
     remoteRepository(id: 'quonb-snapshot', url: serverRoot + '/plugins-snapshot-local/')
     remoteRepository(id: 'quonb-release', url: serverRoot + '/plugins-release-local/')
@@ -38,7 +37,9 @@ grails.project.dependency.resolution = {
     dependencies {
         compile "net.java.dev.jets3t:jets3t:latest.release"
 
-        test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
+        test("org.spockframework:spock-grails-support:0.7-groovy-2.0"){
+            export = false
+        }
     }
 
     plugins {
@@ -51,6 +52,7 @@ grails.project.dependency.resolution = {
 
         test(":spock:latest.release") {
             exclude "spock-grails-support"
+            export = false
         }
     }
 }
