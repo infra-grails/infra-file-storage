@@ -80,4 +80,13 @@ public interface FileStorage {
      * @return
      */
     public long getSize(String path, String filename, String bucket) throws Exception;
+
+    /**
+     * Returns file, downloads it if necessary
+     * @param path
+     * @param filename
+     * @param bucket
+     * @return
+     */
+    public File getFile(String path, String filename, String bucket) throws Exception;
 }

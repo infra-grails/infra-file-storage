@@ -19,7 +19,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
@@ -155,6 +158,18 @@ public class S3FileStorage extends FileStoragePrototype {
     @Override
     public long getSize(String path, String filename, String bucket) throws Exception {
         return s3Service.getObjectDetails(getBucket(bucket), buildObjectKey(path, filename)).getContentLength();
+    }
+
+    @Override
+    public File getFile(String path, String filename, String bucket) throws Exception {
+        S3Object object = s3Service.getObject(getBucket(bucket), buildObjectKey(path, filename));
+        File f = File.createTempFile(filename, "s3");
+
+        ReadableByteChannel rbc = Channels.newChannel(object.getDataInputStream());
+        FileOutputStream fos = new FileOutputStream(f);
+        fos.getChannel().transferFrom(rbc, 0, 1 << 24);
+
+        return f;
     }
 
     private void invalidateCloudFront(final String objectKey, final String bucket) {

@@ -73,6 +73,16 @@ class DomainFilesManager implements FilesManager {
      */
 
     @Override
+    File getFile() {
+        holder.getFile()
+    }
+
+    @Override
+    File getFile(String filename) {
+        holder.getFile(filename)
+    }
+
+    @Override
     FileStorage getStorage() {
         holder.storage
     }

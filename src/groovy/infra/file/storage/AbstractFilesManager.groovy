@@ -8,6 +8,13 @@ import org.springframework.web.multipart.MultipartFile
  */
 abstract class AbstractFilesManager implements FilesManager {
 
+    File getFile(String filename=null) {
+        if (!filename) {
+            if (fileNames.size() == 1) filename = fileNames.first()
+        }
+        storage.getFile(path, filename, bucket)
+    }
+
     /**
      * Returns an accessible url for a file
      * @param filename

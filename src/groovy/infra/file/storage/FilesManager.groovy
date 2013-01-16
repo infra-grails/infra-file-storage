@@ -7,17 +7,20 @@ import org.springframework.web.multipart.MultipartFile
  * @since 1/15/13 9:58 PM
  */
 public interface FilesManager {
-    abstract public FileStorage getStorage()
+    File getFile()
+    File getFile(String filename)
 
-    abstract public String getPath()
+    public FileStorage getStorage()
 
-    abstract public String getBucket()
+    public String getPath()
 
-    abstract public Collection<String> getFileNames()
+    public String getBucket()
 
-    abstract public void setFileNames(Collection<String> fileNames)
+    public Collection<String> getFileNames()
 
-    abstract public String[] getAllowedExtensions()
+    public void setFileNames(Collection<String> fileNames)
+
+    public String[] getAllowedExtensions()
 
     String getUrl(String filename)
 
