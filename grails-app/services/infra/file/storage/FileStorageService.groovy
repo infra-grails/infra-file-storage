@@ -1,7 +1,6 @@
 package infra.file.storage
 
 import grails.util.Environment
-import infra.file.storage.*
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.web.multipart.MultipartFile
@@ -110,8 +109,8 @@ class FileStorageService implements ApplicationContextAware {
      * @param domain
      * @return
      */
-    FilesManager getManager(def domain, boolean domainFiles = true) {
-        FilesManager m = new AnnotatedFilesManager(domain, this, null)
+    FilesManager getManager(def domain, boolean domainFiles = true, FilesHolder holderAnnotation = null) {
+        FilesManager m = new AnnotatedFilesManager(domain, this, holderAnnotation)
         if (domainFiles) m = new DomainFilesManager(m)
         m
     }

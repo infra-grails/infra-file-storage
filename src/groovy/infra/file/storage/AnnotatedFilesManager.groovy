@@ -1,7 +1,4 @@
 package infra.file.storage
-
-import infra.file.storage.FileStorageService
-
 /**
  * @author alari
  * @since 12/18/12 6:34 PM
