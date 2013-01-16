@@ -2,7 +2,7 @@ package infra.file.storage
 
 import grails.plugin.spock.IntegrationSpec
 import org.springframework.core.io.ClassPathResource
-import ru.mirari.infra.FileStorageService
+import infra.file.storage.FileStorageService
 
 class BasicFileStorageSpec extends IntegrationSpec {
 

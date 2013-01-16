@@ -1,4 +1,4 @@
-package ru.mirari.infra
+package infra.file.storage
 
 import grails.util.Environment
 import infra.file.storage.*

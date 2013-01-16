@@ -1,6 +1,6 @@
 package infra.file.storage
 
-import ru.mirari.infra.FileStorageService
+import infra.file.storage.FileStorageService
 
 /**
  * @author alari
