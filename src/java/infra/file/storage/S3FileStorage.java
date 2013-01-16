@@ -152,6 +152,11 @@ public class S3FileStorage extends FileStoragePrototype {
         }
     }
 
+    @Override
+    public long getSize(String path, String filename, String bucket) throws Exception {
+        return s3Service.getObjectDetails(getBucket(bucket), buildObjectKey(path, filename)).getContentLength();
+    }
+
     private void invalidateCloudFront(final String objectKey, final String bucket) {
         try {
             String[] objectKeys = new String[]{objectKey};

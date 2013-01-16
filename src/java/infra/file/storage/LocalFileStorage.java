@@ -75,6 +75,11 @@ public class LocalFileStorage extends FileStoragePrototype {
         return urlRoot.concat(getFullPath(path, filename, bucket));
     }
 
+    @Override
+    public long getSize(String path, String filename, String bucket) {
+        return new File(getFullLocalPath(path, filename, bucket)).length();
+    }
+
     private String getFullLocalPath(String path, String filename, String bucket) {
         return localRoot.concat(getFullPath(path, filename, bucket));
     }

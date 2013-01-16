@@ -70,4 +70,14 @@ public interface FileStorage {
      * @return
      */
     public String getUrl(String path, String filename, String bucket);
+
+    /**
+     * Returns size of a stored file
+     *
+     * @param path
+     * @param filename
+     * @param bucket
+     * @return
+     */
+    public long getSize(String path, String filename, String bucket) throws Exception;
 }

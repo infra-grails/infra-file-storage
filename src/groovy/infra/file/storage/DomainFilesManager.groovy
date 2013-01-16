@@ -19,14 +19,14 @@ class DomainFilesManager implements FilesManager {
     }
 
     @Override
-    String store(File file, String filename=null) {
+    String store(File file, String filename = null) {
         filename = holder.store(file, filename)
         touchHeldFile(filename, file.length())
         filename
     }
 
     @Override
-    String store(MultipartFile file, String filename=null) {
+    String store(MultipartFile file, String filename = null) {
         filename = holder.store(file, filename)
         touchHeldFile(filename, file.size)
         filename
@@ -42,6 +42,11 @@ class DomainFilesManager implements FilesManager {
     void delete() {
         holder.delete()
         FileDomain.deleteAll(FileDomain.findAllWhere(path: path, bucket: bucket, storageName: storage.name))
+    }
+
+    @Override
+    long getSize(String filename) {
+        getDomain(filename)?.size
     }
 
     private touchHeldFile(String filename, long size) {
@@ -68,6 +73,7 @@ class DomainFilesManager implements FilesManager {
      * DELEGATING
      * @return
      */
+
     @Override
     FileStorage getStorage() {
         holder.storage

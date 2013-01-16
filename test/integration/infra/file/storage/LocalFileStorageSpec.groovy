@@ -3,6 +3,7 @@ package infra.file.storage
 import grails.plugin.spock.IntegrationSpec
 import org.springframework.core.io.ClassPathResource
 import ru.mirari.infra.FileStorageService
+import spock.lang.Shared
 import spock.lang.Stepwise
 
 /**
@@ -13,9 +14,9 @@ class LocalFileStorageSpec extends IntegrationSpec {
 
     FileStorageService fileStorageService
 
-    File file
+    @Shared File file
 
-    def setup() {
+    def setupSpec() {
         file = new ClassPathResource("test.tmp", this.class).getFile();
     }
 

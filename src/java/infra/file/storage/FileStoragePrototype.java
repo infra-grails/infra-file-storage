@@ -3,6 +3,8 @@ package infra.file.storage;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * @author alari
@@ -30,5 +32,13 @@ abstract public class FileStoragePrototype implements FileStorage {
         File tmp = File.createTempFile("uploaded", filename);
         file.transferTo(tmp);
         return store(tmp, path, filename, bucket);
+    }
+
+    @Override
+    public long getSize(String path, String filename, String bucket) throws Exception {
+        HttpURLConnection con =
+                (HttpURLConnection) new URL(getUrl(path, filename, bucket)).openConnection();
+        con.setRequestMethod("HEAD");
+        return con.getContentLengthLong();
     }
 }

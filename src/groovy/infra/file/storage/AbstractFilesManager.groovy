@@ -77,6 +77,10 @@ abstract class AbstractFilesManager implements FilesManager {
         filename
     }
 
+    long getSize(String filename) {
+        getStorage().getSize(path, filename, bucket);
+    }
+
     private void checkFile(final MultipartFile file) {
         String extension = file.originalFilename.substring(file.originalFilename.lastIndexOf(".") + 1)
         if (allowedExtensions && !(extension in allowedExtensions)) {

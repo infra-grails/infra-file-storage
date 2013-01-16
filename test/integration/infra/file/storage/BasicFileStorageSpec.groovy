@@ -22,7 +22,7 @@ class BasicFileStorageSpec extends IntegrationSpec {
 
     void "basic holder story"() {
         given:
-        def holder = fileStorageService.getManager(path, bucket)
+        def holder = fileStorageService.getManager(path, bucket, false)
         String src = "web-app/f/${bucket}/${path}/test.tmp"
 
         expect:
@@ -37,6 +37,7 @@ class BasicFileStorageSpec extends IntegrationSpec {
         then:
         holder.fileNames == ["test.tmp"]
         holder.exists("test.tmp")
+        holder.getSize("test.tmp") == file.length()
         holder.getUrl("test.tmp") == "/f/${bucket}/${path}/test.tmp"
         new File(src).isFile()
         new File(src).text == file.text

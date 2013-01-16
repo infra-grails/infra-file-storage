@@ -60,4 +60,6 @@ public interface FilesManager {
     String store(MultipartFile file, String filename)
 
     String store(MultipartFile file)
+
+    long getSize(String filename)
 }
