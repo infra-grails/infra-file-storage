@@ -99,8 +99,7 @@ class FileStorageService implements ApplicationContextAware {
      */
     FilesManager getManager(String path, String bucket = null, boolean domainFiles = true) {
         FilesManager m = new BasicFilesManager(defaultStorage, path, bucket)
-        if (domainFiles) m = new DomainFilesManager(m)
-        m
+        domainFiles ? new DomainFilesManager(m) : m
     }
 
     /**
@@ -111,7 +110,6 @@ class FileStorageService implements ApplicationContextAware {
      */
     FilesManager getManager(def domain, boolean domainFiles = true, FilesHolder holderAnnotation = null) {
         FilesManager m = new AnnotatedFilesManager(domain, this, holderAnnotation)
-        if (domainFiles) m = new DomainFilesManager(m)
-        m
+        domainFiles ? new DomainFilesManager(m) : m
     }
 }

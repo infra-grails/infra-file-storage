@@ -50,18 +50,16 @@ class DomainFilesManager implements FilesManager {
     }
 
     private touchHeldFile(String filename, long size) {
-        FileDomain heldFile = FileDomain.findOrCreateWhere(
+        FileDomain heldFile = FileDomain.findOrSaveWhere(
                 filename: filename,
                 path: path,
                 bucket: bucket,
                 storageName: storage.name
         )
-        println heldFile
         if (heldFile.size != size) {
             heldFile.size = size
             heldFile.save()
         }
-        println heldFile
         assert heldFile.id
     }
 

@@ -4,7 +4,7 @@ package infra.file.storage
  * @since 12/18/12 6:34 PM
  */
 class AnnotatedFilesManager extends AbstractFilesManager {
-    private def domain
+    private Object domain
     private final FilesHolder holder
     private final String propertyName
     private final FileStorage storage
@@ -12,7 +12,7 @@ class AnnotatedFilesManager extends AbstractFilesManager {
 
     AnnotatedFilesManager(def domain, FileStorageService fileStorageService, FilesHolder holder) {
         this.domain = domain
-        this.holder = holder instanceof FilesHolder ? holder : domain.class.getAnnotation(FilesHolder)
+        this.holder = holder instanceof FilesHolder ? holder : (FilesHolder)domain.class.getAnnotation(FilesHolder)
 
         propertyName = this.holder.filesProperty()
 
@@ -37,15 +37,20 @@ class AnnotatedFilesManager extends AbstractFilesManager {
 
     @Override
     Collection<String> getFileNames() {
+        if(!domain.hasProperty(propertyName)) return []
+
         if (!domain."${propertyName}") {
             domain."${propertyName}" = []
         }
+
         domain."${propertyName}"
     }
 
     @Override
     void setFileNames(Collection<String> fileNames) {
-        domain."${propertyName}" = fileNames
+        if (domain.hasProperty(propertyName)) {
+            domain."${propertyName}" = fileNames
+        }
     }
 
     @Override
