@@ -9,6 +9,8 @@ class AnnotatedFilesManager extends AbstractFilesManager {
     private final String propertyName
     private final FileStorage storage
 
+    Collection<String> fileNames
+
 
     AnnotatedFilesManager(def domain, FileStorageService fileStorageService, FilesHolder holder) {
         this.domain = domain
@@ -18,6 +20,16 @@ class AnnotatedFilesManager extends AbstractFilesManager {
 
         final String storageName = ((Closure<String>) this.holder.storage().newInstance(domain, domain)).call()
         storage = fileStorageService.getFileStorage(storageName)
+
+        try {
+            if (!domain."${propertyName}") {
+                domain."${propertyName}" = []
+            }
+
+            fileNames = domain."${propertyName}"
+        } catch(MissingFieldException e) {
+            fileNames = []
+        }
     }
 
     @Override
@@ -36,21 +48,9 @@ class AnnotatedFilesManager extends AbstractFilesManager {
     }
 
     @Override
-    Collection<String> getFileNames() {
-        if(!domain.hasProperty(propertyName)) return []
-
-        if (!domain."${propertyName}") {
-            domain."${propertyName}" = []
-        }
-
-        domain."${propertyName}"
-    }
-
-    @Override
     void setFileNames(Collection<String> fileNames) {
-        if (domain.hasProperty(propertyName)) {
-            domain."${propertyName}" = fileNames
-        }
+        this.fileNames.clear()
+        this.fileNames.addAll(fileNames)
     }
 
     @Override
