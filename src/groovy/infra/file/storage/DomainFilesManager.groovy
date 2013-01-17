@@ -131,7 +131,6 @@ class DomainFilesManager implements FilesManager {
 
     @Override
     boolean exists(String filename) {
-        println getDomain(filename)
         getDomain(filename) != null
     }
 }
