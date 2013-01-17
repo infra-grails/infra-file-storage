@@ -37,12 +37,14 @@ class DomainFilesManager implements FilesManager {
     void delete(String filename) {
         holder.delete(filename)
         getDomain(filename)?.delete()
+        fileDomainMap.remove(filename)
     }
 
     @Override
     void delete() {
         holder.delete()
         FileDomain.deleteAll(FileDomain.findAllWhere(path: path, bucket: bucket, storageName: storage.name))
+        fileDomainMap.clear()
     }
 
     @Override
@@ -62,6 +64,7 @@ class DomainFilesManager implements FilesManager {
             heldFile.save()
         }
         assert heldFile.id
+        fileDomainMap.put(filename, heldFile)
     }
 
     FileDomain getDomain(String filename) {
@@ -128,6 +131,7 @@ class DomainFilesManager implements FilesManager {
 
     @Override
     boolean exists(String filename) {
+        println getDomain(filename)
         getDomain(filename) != null
     }
 }
