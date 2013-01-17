@@ -22,12 +22,17 @@ class AnnotatedFilesManager extends AbstractFilesManager {
         storage = fileStorageService.getFileStorage(storageName)
 
         try {
+            String getter = "get"
+            getter += propertyName[0].toUpperCase()
+            getter += propertyName.substring(1)
+            domain.class.getMethod(getter)
+
             if (!domain."${propertyName}") {
                 domain."${propertyName}" = []
             }
 
             fileNames = domain."${propertyName}"
-        } catch(MissingFieldException e) {
+        } catch(NoSuchMethodException e) {
             fileNames = []
         }
     }
