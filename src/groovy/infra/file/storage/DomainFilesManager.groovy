@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile
  */
 class DomainFilesManager implements FilesManager {
     private final FilesManager holder
+    private Map<String,FileDomain> fileDomainMap = [:]
 
     DomainFilesManager(FilesManager holder) {
         this.holder = holder
@@ -64,7 +65,10 @@ class DomainFilesManager implements FilesManager {
     }
 
     FileDomain getDomain(String filename) {
-        FileDomain.findWhere(filename: filename, path: path, bucket: bucket, storageName: storage.name)
+        if (!fileDomainMap.containsKey(filename)) {
+            fileDomainMap.put filename, FileDomain.findWhere(filename: filename, path: path, bucket: bucket, storageName: storage.name)
+        }
+        fileDomainMap.get(filename)
     }
 
     /**
@@ -124,6 +128,6 @@ class DomainFilesManager implements FilesManager {
 
     @Override
     boolean exists(String filename) {
-        holder.exists(filename)
+        getDomain(filename) != null
     }
 }
