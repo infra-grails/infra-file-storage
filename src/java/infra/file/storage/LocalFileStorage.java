@@ -35,10 +35,11 @@ public class LocalFileStorage extends FileStoragePrototype {
             return;
         }
 
-        localRoot = localConf.get("localRoot").toString().isEmpty() ? localRoot : localConf.get("localRoot").toString();
-        defaultBucket = localConf.get("defaultBucket").toString();
+        if(localConf.containsKey("localRoot")) localRoot = localConf.get("localRoot").toString().isEmpty() ? localRoot : localConf.get("localRoot").toString();
+        if(localConf.containsKey("defaultBucket")) defaultBucket = localConf.get("defaultBucket").toString();
 
-        urlRoot = localConf.get("urlRoot").toString();
+        if(localConf.containsKey("urlRoot")) urlRoot = localConf.get("urlRoot").toString();
+
         if (urlRoot == null || urlRoot.isEmpty()) {
             urlRoot = ((Map) grailsApplication.getConfig().get("grails")).get("serverURL").toString();
             if (urlRoot.equals("{}")) urlRoot = "/";
