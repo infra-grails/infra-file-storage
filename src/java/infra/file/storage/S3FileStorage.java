@@ -46,6 +46,7 @@ public class S3FileStorage extends FileStoragePrototype {
 
     @Autowired
     S3FileStorage(GrailsApplication grailsApplication) throws S3ServiceException, CloudFrontServiceException {
+        System.out.println("building s3");
         ConfigObject config;
         Map s3Conf;
         try {
@@ -185,7 +186,7 @@ public class S3FileStorage extends FileStoragePrototype {
                 log.info(invalidation);
             }
         } catch (CloudFrontServiceException e) {
-            log.error("Cannot invalidate object!", e);
+            log.error("Cannot invalidate object! ".concat(e.getErrorMessage()));
         }
     }
 
