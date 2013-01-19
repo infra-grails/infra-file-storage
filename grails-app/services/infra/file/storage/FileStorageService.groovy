@@ -12,14 +12,17 @@ class FileStorageService implements ApplicationContextAware {
     private Map<String, FileStorage> storages = [:]
     private FileStorage defaultStorage
 
-    private String deployedStorageName = "s3"
-    private String developmentStorageName = "local"
+    String deployedStorageName = "s3"
+    String developmentStorageName = "local"
+    def grailsApplication
 
     @Override
     void setApplicationContext(ApplicationContext applicationContext) throws org.springframework.beans.BeansException {
         for (FileStorage fs : applicationContext.getBeansOfType(FileStorage).values()) {
             storages.put(fs.name, fs)
         }
+        deployedStorageName = grailsApplication.config.plugin.fileStorageService.deployed ?: "s3"
+        developmentStorageName = grailsApplication.config.plugin.fileStorageService.development ?: "local"
         defaultStorage = storages.get(Environment.isWarDeployed() ? deployedStorageName : developmentStorageName)
         assert defaultStorage
     }
