@@ -11,5 +11,6 @@ class FileDomain {
     static constraints = {
         size nullable: true
         bucket nullable: true
+        filename unique: ["path","storageName","bucket"]
     }
 }

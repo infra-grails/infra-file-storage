@@ -46,7 +46,6 @@ public class S3FileStorage extends FileStoragePrototype {
 
     @Autowired
     S3FileStorage(GrailsApplication grailsApplication) throws S3ServiceException, CloudFrontServiceException {
-        System.out.println("building s3");
         ConfigObject config;
         Map s3Conf;
         try {
