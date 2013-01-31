@@ -12,9 +12,9 @@ abstract class AbstractFilesManager implements FilesManager {
 
     File getFile(String filename=null) {
         if (!filename) {
-            if (fileNames.size() == 1) filename = fileNames.first()
+            if (getFileNames().size() == 1) filename = getFileNames().first()
         }
-        storage.getFile(path, filename, bucket)
+        getStorage().getFile(getPath(), filename, getBucket())
     }
 
     /**
@@ -24,12 +24,12 @@ abstract class AbstractFilesManager implements FilesManager {
      */
     String getUrl(String filename = null) {
         if (!filename) {
-            if (fileNames.size() == 1) filename = fileNames.first()
+            if (getFileNames().size() == 1) filename = getFileNames().first()
         }
         if (!filename) {
             throw new IllegalArgumentException("Null filename is allowed only when domain (already) holds only a single file")
         }
-        storage.getUrl(path, filename, bucket)
+        getStorage().getUrl(getPath(), filename, getBucket())
     }
 
     /**
@@ -37,18 +37,18 @@ abstract class AbstractFilesManager implements FilesManager {
      * @param filename
      */
     void delete(String filename) {
-        storage.delete(path, filename, bucket)
-        fileNames.remove(filename)
+        getStorage().delete(getPath(), filename, getBucket())
+        getFileNames().remove(filename)
     }
 
     /**
      * Deletes all the holder files
      */
     void delete() {
-        for (String filename : fileNames) {
-            storage.delete(path, filename, bucket)
+        for (String filename : getFileNames()) {
+            getStorage().delete(getPath(), filename, getBucket())
         }
-        fileNames = []
+        setFileNames([])
     }
 
     /**
@@ -57,7 +57,7 @@ abstract class AbstractFilesManager implements FilesManager {
      * @return
      */
     boolean exists(String filename) {
-        storage.exists(path, filename, bucket)
+        getStorage().exists(getPath(), filename, getBucket())
     }
 
     /**
@@ -68,8 +68,8 @@ abstract class AbstractFilesManager implements FilesManager {
      */
     String store(File file, String filename = null) {
         checkFile(file)
-        filename = storage.store(file, path, filename, bucket)
-        fileNames.add filename
+        filename = getStorage().store(file, getPath(), filename, getBucket())
+        getFileNames().add filename
         filename
     }
 
@@ -81,25 +81,27 @@ abstract class AbstractFilesManager implements FilesManager {
      */
     String store(MultipartFile file, String filename = null) {
         checkFile(file)
-        filename = storage.store(file, path, filename, bucket)
-        fileNames.add filename
+        filename = getStorage().store(file, getPath(), filename, getBucket())
+        getFileNames().add filename
         filename
     }
 
     long getSize(String filename) {
-        getStorage().getSize(path, filename, bucket);
+        getStorage().getSize(getPath(), filename, getBucket());
     }
 
     private void checkFile(final MultipartFile file) {
         String extension = file.originalFilename.substring(file.originalFilename.lastIndexOf(".") + 1)
-        if (allowedExtensions && !(extension in allowedExtensions)) {
+        if (getAllowedExtensions() && !getAllowedExtensions().contains(extension)) {
             throw new IllegalArgumentException("Wrong file extension")
         }
     }
 
     private void checkFile(final File file) {
         String extension = file.name.substring(file.name.lastIndexOf(".") + 1)
-        if (allowedExtensions && !(extension in allowedExtensions)) {
+        if (getAllowedExtensions() && !getAllowedExtensions().contains(extension)) {
+            println extension
+            println getAllowedExtensions()
             throw new IllegalArgumentException("Wrong file extension")
         }
     }

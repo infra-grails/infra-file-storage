@@ -1,12 +1,9 @@
 package infra.file.storage
 
-import groovy.transform.CompileStatic
-
 /**
  * @author alari
  * @since 12/18/12 6:34 PM
  */
-@CompileStatic
 class AnnotatedFilesManager extends AbstractFilesManager {
     private Object domain
     private final FilesHolder holder
@@ -14,7 +11,6 @@ class AnnotatedFilesManager extends AbstractFilesManager {
     private final FileStorage storage
 
     Collection<String> fileNames
-
 
     AnnotatedFilesManager(def domain, FileStorageService fileStorageService, FilesHolder holder) {
         this.domain = domain

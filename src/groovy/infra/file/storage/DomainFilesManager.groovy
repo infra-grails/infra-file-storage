@@ -55,7 +55,7 @@ class DomainFilesManager implements FilesManager {
     }
 
     private touchHeldFile(String filename, long size) {
-        FileDomain heldFile = FileDomain.findOrSaveWhere(
+        FileDomain heldFile = (FileDomain)FileDomain.findOrSaveWhere(
                 filename: filename,
                 path: path,
                 bucket: bucket,
@@ -71,7 +71,7 @@ class DomainFilesManager implements FilesManager {
 
     FileDomain getDomain(String filename) {
         if (!fileDomainMap.containsKey(filename)) {
-            fileDomainMap.put filename, FileDomain.findWhere(filename: filename, path: path, bucket: bucket, storageName: storage.name)
+            fileDomainMap.put filename, (FileDomain)FileDomain.findWhere(filename: filename, path: path, bucket: bucket, storageName: storage.name)
         }
         fileDomainMap.get(filename)
     }
