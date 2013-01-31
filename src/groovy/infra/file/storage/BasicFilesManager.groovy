@@ -1,8 +1,12 @@
 package infra.file.storage
+
+import groovy.transform.CompileStatic
+
 /**
  * @author alari
  * @since 12/18/12 6:44 PM
  */
+@CompileStatic
 class BasicFilesManager extends AbstractFilesManager {
 
     private final FileStorage storage

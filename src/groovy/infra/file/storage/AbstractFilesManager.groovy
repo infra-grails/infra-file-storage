@@ -1,11 +1,13 @@
 package infra.file.storage
 
+import groovy.transform.CompileStatic
 import org.springframework.web.multipart.MultipartFile
 
 /**
  * @author alari
  * @since 12/18/12 6:16 PM
  */
+@CompileStatic
 abstract class AbstractFilesManager implements FilesManager {
 
     File getFile(String filename=null) {

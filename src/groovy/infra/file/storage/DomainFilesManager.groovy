@@ -1,11 +1,13 @@
 package infra.file.storage
 
+import groovy.transform.CompileStatic
 import org.springframework.web.multipart.MultipartFile
 
 /**
  * @author alari
  * @since 1/15/13 9:45 PM
  */
+@CompileStatic
 class DomainFilesManager implements FilesManager {
     private final FilesManager holder
     private Map<String,FileDomain> fileDomainMap = [:]
