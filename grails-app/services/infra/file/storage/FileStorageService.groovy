@@ -100,9 +100,9 @@ class FileStorageService implements ApplicationContextAware {
      * @param bucket
      * @return
      */
-    FilesManager getManager(String path, String bucket = null, boolean domainFiles = true) {
+    FilesManager getManager(String path, String bucket = null, boolean enableFileDomains = true) {
         FilesManager m = new BasicFilesManager(defaultStorage, path, bucket)
-        domainFiles ? new DomainFilesManager(m) : m
+        enableFileDomains ? new DomainFilesManager(m) : m
     }
 
     /**
@@ -111,8 +111,8 @@ class FileStorageService implements ApplicationContextAware {
      * @param domain
      * @return
      */
-    FilesManager getManager(def domain, boolean domainFiles = true, FilesHolder holderAnnotation = null) {
+    FilesManager getManager(def domain, FilesHolder holderAnnotation = null) {
         FilesManager m = new AnnotatedFilesManager(domain, this, holderAnnotation)
-        domainFiles ? new DomainFilesManager(m) : m
+        m.fileDomainsEnabled ? new DomainFilesManager(m) : m
     }
 }

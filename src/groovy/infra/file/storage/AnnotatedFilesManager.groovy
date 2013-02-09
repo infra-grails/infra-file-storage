@@ -9,6 +9,7 @@ class AnnotatedFilesManager extends AbstractFilesManager {
     private final FilesHolder holder
     private final String propertyName
     private final FileStorage storage
+    private final boolean fileDomainsEnabled
 
     Collection<String> fileNames
 
@@ -17,6 +18,8 @@ class AnnotatedFilesManager extends AbstractFilesManager {
         this.holder = holder instanceof FilesHolder ? holder : (FilesHolder)domain.class.getAnnotation(FilesHolder)
 
         propertyName = this.holder.filesProperty()
+
+        fileDomainsEnabled = this.holder.enableFileDomains()
 
         final String storageName = ((Closure<String>) this.holder.storage().newInstance(domain, domain)).call()
         storage = fileStorageService.getFileStorage(storageName)
@@ -61,5 +64,9 @@ class AnnotatedFilesManager extends AbstractFilesManager {
     @Override
     String[] getAllowedExtensions() {
         holder.allowedExtensions()
+    }
+
+    boolean isFileDomainsEnabled() {
+        fileDomainsEnabled
     }
 }

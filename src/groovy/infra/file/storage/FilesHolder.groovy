@@ -41,4 +41,10 @@ public @interface FilesHolder {
      * @return
      */
     String[] allowedExtensions() default []
+
+    /**
+     * Whether enable storing file domain objects or not
+     * @return
+     */
+    boolean enableFileDomains() default true
 }
