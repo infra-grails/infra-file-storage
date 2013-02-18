@@ -1,6 +1,8 @@
 package infra.file.storage
 
-class FileDomain {
+import infra.file.storage.domain.FileInfoDomain
+
+class FileDomain implements FileInfoDomain {
     String path
     String filename
     String storageName

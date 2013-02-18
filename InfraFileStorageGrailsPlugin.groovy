@@ -1,3 +1,5 @@
+import infra.file.storage.domain.FileDomainRepoProviderImpl
+
 class InfraFileStorageGrailsPlugin {
     // the plugin version
     def version = "0.2-SNAPSHOT"
@@ -44,6 +46,7 @@ Provides convenient methods to store files on local path in dev/test mode and on
     def doWithSpring = {
         xmlns context: "http://www.springframework.org/schema/context"
         context.'component-scan'('base-package': "infra.file.storage")
+        fileDomainRepoProvider(FileDomainRepoProviderImpl)
     }
 
     def doWithDynamicMethods = { ctx ->

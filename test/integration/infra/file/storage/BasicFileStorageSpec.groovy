@@ -1,6 +1,7 @@
 package infra.file.storage
 
 import grails.plugin.spock.IntegrationSpec
+import infra.file.storage.domain.DomainFilesManager
 import org.springframework.core.io.ClassPathResource
 
 class BasicFileStorageSpec extends IntegrationSpec {

@@ -1,6 +1,8 @@
 package infra.file.storage
 
 import grails.util.Environment
+import infra.file.storage.domain.DomainFilesManager
+import infra.file.storage.domain.FileDomainRepoProvider
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.web.multipart.MultipartFile
@@ -14,7 +16,9 @@ class FileStorageService implements ApplicationContextAware {
 
     String deployedStorageName = "s3"
     String developmentStorageName = "local"
+
     def grailsApplication
+    FileDomainRepoProvider fileDomainRepoProvider
 
     @Override
     void setApplicationContext(ApplicationContext applicationContext) throws org.springframework.beans.BeansException {
@@ -102,7 +106,7 @@ class FileStorageService implements ApplicationContextAware {
      */
     FilesManager getManager(String path, String bucket = null, boolean enableFileDomains = true) {
         FilesManager m = new BasicFilesManager(defaultStorage, path, bucket)
-        enableFileDomains ? new DomainFilesManager(m) : m
+        enableFileDomains ? new DomainFilesManager(m, fileDomainRepoProvider) : m
     }
 
     /**
@@ -113,6 +117,6 @@ class FileStorageService implements ApplicationContextAware {
      */
     FilesManager getManager(def domain, FilesHolder holderAnnotation = null) {
         FilesManager m = new AnnotatedFilesManager(domain, this, holderAnnotation)
-        m.fileDomainsEnabled ? new DomainFilesManager(m) : m
+        m.fileDomainsEnabled ? new DomainFilesManager(m, fileDomainRepoProvider) : m
     }
 }
