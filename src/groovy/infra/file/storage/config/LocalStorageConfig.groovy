@@ -18,7 +18,7 @@ class LocalStorageConfig {
         localConf = grailsApplication.config?.plugin?.infraFileStorage?.local?.flatten()
         if (!localConf) {
             urlRoot = grailsApplication.config.grails.serverURL.toString().concat("/f/")
-            if (urlRoot.equals("{}/f/")) urlRoot = "/f/";
+            if (urlRoot.equals("[:]/f/")) urlRoot = "/f/";
             return;
         }
 
@@ -29,7 +29,7 @@ class LocalStorageConfig {
 
         if (urlRoot == null || urlRoot.isEmpty()) {
             urlRoot = grailsApplication.config.grails.serverURL?.toString();
-            if (urlRoot.equals("{}")) urlRoot = "/";
+            if (urlRoot.equals("[:]")) urlRoot = "/";
             if (!urlRoot.endsWith("/")) urlRoot = urlRoot.concat("/");
             urlRoot = urlRoot.concat("f/");
         }
