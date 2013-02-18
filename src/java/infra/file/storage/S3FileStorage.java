@@ -1,6 +1,6 @@
 package infra.file.storage;
 
-import groovy.util.ConfigObject;
+import infra.file.storage.config.S3StorageConfig;
 import org.apache.log4j.Logger;
 import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.jets3t.service.CloudFrontService;
@@ -12,8 +12,6 @@ import org.jets3t.service.impl.rest.httpclient.RestS3Service;
 import org.jets3t.service.model.S3Object;
 import org.jets3t.service.model.cloudfront.Distribution;
 import org.jets3t.service.model.cloudfront.Invalidation;
-import org.jets3t.service.security.AWSCredentials;
-import org.jets3t.service.security.ProviderCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,8 +22,6 @@ import java.io.IOException;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author alari
@@ -33,63 +29,18 @@ import java.util.Map;
  */
 @Component
 public class S3FileStorage extends FileStoragePrototype {
-    private final String defaultBucket;
-    private final String urlRoot;
-    private final Logger log = Logger.getLogger(S3FileStorage.class);
+    final Logger log = Logger.getLogger(S3FileStorage.class);
 
     final RestS3Service s3Service;
     final CloudFrontService cloudFrontService;
 
-    private final String urlRootSuffix = ".s3.amazonaws.com/";
-
-    private final Map<String, String> buckets;
+    private S3StorageConfig config;
 
     @Autowired
     S3FileStorage(GrailsApplication grailsApplication) throws S3ServiceException, CloudFrontServiceException {
-        ConfigObject config;
-        Map s3Conf;
-        try {
-            config = (ConfigObject) grailsApplication.getConfig().get("plugin");
-            config = (ConfigObject) config.get("infraFileStorage");
-            s3Conf = ((ConfigObject) config.get("s3")).flatten();
-        } catch (NullPointerException npe) {
-            defaultBucket = null;
-            urlRoot = null;
-            s3Service = null;
-            cloudFrontService = null;
-            buckets = null;
-            return;
-        }
-
-        ProviderCredentials awsCredentials = new AWSCredentials(
-                s3Conf.get("accessKey").toString(),
-                s3Conf.get("secretKey").toString()
-        );
-
-        s3Service = new RestS3Service(awsCredentials);
-        cloudFrontService = new CloudFrontService(awsCredentials);
-
-        defaultBucket = s3Conf.get("defaultBucket").toString();
-
-        String urlRootBuilder = s3Conf.get("urlRoot").toString();
-
-        Map<String, String> _buckets = new HashMap<String, String>();
-
-        if (((ConfigObject) config.get("s3")).get("buckets") instanceof ConfigObject) {
-            Map bucketsConf = ((ConfigObject) ((ConfigObject) config.get("s3")).get("buckets")).flatten();
-            for (Object k : bucketsConf.keySet()) {
-                _buckets.put(k.toString(), bucketsConf.get(k).toString());
-                if (!_buckets.get(k.toString()).endsWith("/")) {
-                    _buckets.put(k.toString(), _buckets.get(k.toString()).concat("/"));
-                }
-            }
-        }
-
-        buckets = _buckets;
-
-        if (urlRootBuilder == null || urlRootBuilder.isEmpty()) urlRootBuilder = defaultBucket.concat(urlRootSuffix);
-        if (!urlRootBuilder.endsWith("/")) urlRootBuilder = urlRootBuilder.concat("/");
-        urlRoot = urlRootBuilder;
+        config = new S3StorageConfig(grailsApplication);
+        s3Service = config.buildS3Service();
+        cloudFrontService = config.buildCloudFrontService();
     }
 
     @Override
@@ -146,12 +97,12 @@ public class S3FileStorage extends FileStoragePrototype {
 
     @Override
     public String getUrl(String path, String filename, String bucket) {
-        if (bucket == null || bucket.isEmpty() || bucket.equals(defaultBucket)) {
-            return urlRoot.concat(buildObjectKey(path, filename));
-        } else if (buckets.containsKey(bucket)) {
-            return buckets.get(bucket).concat(buildObjectKey(path, filename));
+        if (bucket == null || bucket.isEmpty() || bucket.equals(config.getDefaultBucket())) {
+            return config.getUrlRoot().concat(buildObjectKey(path, filename));
+        } else if (config.getBuckets().containsKey(bucket)) {
+            return config.getBuckets().get(bucket).concat(buildObjectKey(path, filename));
         } else {
-            return "http://".concat(bucket).concat(urlRootSuffix).concat(buildObjectKey(path, filename));
+            return "http://".concat(bucket).concat(config.getUrlRootSuffix()).concat(buildObjectKey(path, filename));
         }
     }
 
@@ -197,6 +148,6 @@ public class S3FileStorage extends FileStoragePrototype {
     }
 
     private String getBucket(String bucket) {
-        return (bucket == null || bucket.isEmpty()) ? defaultBucket : bucket;
+        return (bucket == null || bucket.isEmpty()) ? config.getDefaultBucket() : bucket;
     }
 }

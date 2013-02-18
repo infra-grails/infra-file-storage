@@ -1,6 +1,6 @@
 package infra.file.storage;
 
-import groovy.util.ConfigObject;
+import infra.file.storage.config.LocalStorageConfig;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * @author alari
@@ -17,38 +16,11 @@ import java.util.Map;
 @Component
 public class LocalFileStorage extends FileStoragePrototype {
 
-    String defaultBucket = "storage";
-    String localRoot = "./web-app/f/";
-    String urlRoot;
+    private LocalStorageConfig config;
 
     @Autowired
     LocalFileStorage(GrailsApplication grailsApplication) {
-        Map localConf;
-        ConfigObject config;
-        try {
-            config = (ConfigObject) grailsApplication.getConfig().get("plugin");
-            config = (ConfigObject) config.get("infraFileStorage");
-            localConf = ((ConfigObject) config.get("local")).flatten();
-        } catch (NullPointerException npe) {
-            urlRoot = ((Map) grailsApplication.getConfig().get("grails")).get("serverURL").toString().concat("/f/");
-            if (urlRoot.equals("{}/f/")) urlRoot = "/f/";
-            return;
-        }
-
-        if(localConf.containsKey("localRoot")) localRoot = localConf.get("localRoot").toString().isEmpty() ? localRoot : localConf.get("localRoot").toString();
-        if(localConf.containsKey("defaultBucket")) defaultBucket = localConf.get("defaultBucket").toString();
-
-        if(localConf.containsKey("urlRoot")) urlRoot = localConf.get("urlRoot").toString();
-
-        if (urlRoot == null || urlRoot.isEmpty()) {
-            urlRoot = ((Map) grailsApplication.getConfig().get("grails")).get("serverURL").toString();
-            if (urlRoot.equals("{}")) urlRoot = "/";
-            if (!urlRoot.endsWith("/")) urlRoot = urlRoot.concat("/");
-            urlRoot = urlRoot.concat("f/");
-        }
-        if (!urlRoot.endsWith("/")) {
-            urlRoot = urlRoot.concat("/");
-        }
+        config = new LocalStorageConfig(grailsApplication);
     }
 
     @Override
@@ -73,7 +45,7 @@ public class LocalFileStorage extends FileStoragePrototype {
 
     @Override
     public String getUrl(String path, String filename, String bucket) {
-        return urlRoot.concat(getFullPath(path, filename, bucket));
+        return config.getUrlRoot().concat(getFullPath(path, filename, bucket));
     }
 
     @Override
@@ -87,11 +59,11 @@ public class LocalFileStorage extends FileStoragePrototype {
     }
 
     private String getFullLocalPath(String path, String filename, String bucket) {
-        return localRoot.concat(getFullPath(path, filename, bucket));
+        return config.getLocalRoot().concat(getFullPath(path, filename, bucket));
     }
 
     private String getFullPath(String path, String filename, String bucket) {
-        String fullPath = bucket == null || bucket.isEmpty() ? defaultBucket : bucket;
+        String fullPath = bucket == null || bucket.isEmpty() ? config.getDefaultBucket() : bucket;
 
         if (!fullPath.endsWith("/")) fullPath = fullPath.concat("/");
         fullPath = fullPath.concat(path);
@@ -103,7 +75,7 @@ public class LocalFileStorage extends FileStoragePrototype {
 
     private void createDir(String path, String bucket) {
         new File(
-                localRoot.concat(bucket == null || bucket.isEmpty() ? defaultBucket : bucket).concat("/").concat(path)
+                config.getLocalRoot().concat(bucket == null || bucket.isEmpty() ? config.getDefaultBucket() : bucket).concat("/").concat(path)
         ).mkdirs();
     }
 }
