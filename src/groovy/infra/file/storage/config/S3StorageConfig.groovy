@@ -15,11 +15,13 @@ class S3StorageConfig {
     final String urlRoot;
 
 
-    final String urlRootSuffix = ".s3.amazonaws.com/";
+    String urlRootSuffix = ".s3.amazonaws.com/";
 
     final Map<String, String> buckets;
 
     final private ProviderCredentials awsCredentials;
+
+    boolean invalidateCloudFront = false
 
     S3StorageConfig(GrailsApplication grailsApplication) {
         ConfigObject config;

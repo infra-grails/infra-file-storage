@@ -124,6 +124,9 @@ public class S3FileStorage extends FileStoragePrototype {
     }
 
     private void invalidateCloudFront(final String objectKey, final String bucket) {
+        if(!config.isInvalidateCloudFront()) {
+            return;
+        }
         try {
             String[] objectKeys = new String[]{objectKey};
             Distribution[] bucketDistributions = cloudFrontService.listDistributions(bucket);
