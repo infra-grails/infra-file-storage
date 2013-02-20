@@ -17,14 +17,19 @@ class DomainFilesManager implements FilesManager {
 
     DomainFilesManager(FilesManager holder, FileDomainRepoProvider repoProvider) {
         this.holder = holder
-        fileDomainRepo = repoProvider.get(path, storage.name, bucket)
-        fileNames = fileDomainRepo.list().collect{FileInfoDomain d -> d.filename}
+        fileDomainRepo = repoProvider.get(getPath(), getStorage().name, getBucket())
+        refresh()
+    }
+
+    void refresh() {
+        setFileNames fileDomainRepo.list().collect{FileInfoDomain d -> d.filename}
     }
 
     @Override
     String store(File file, String filename = null) {
         filename = holder.store(file, filename)
         fileDomainRepo.update(filename, file.length())
+        if (!getFileNames().contains(filename)) getFileNames().add(filename)
         filename
     }
 
@@ -32,6 +37,7 @@ class DomainFilesManager implements FilesManager {
     String store(MultipartFile file, String filename = null) {
         filename = holder.store(file, filename)
         fileDomainRepo.update(filename, file.size)
+        if (!getFileNames().contains(filename)) getFileNames().add(filename)
         filename
     }
 
@@ -39,12 +45,14 @@ class DomainFilesManager implements FilesManager {
     void delete(String filename) {
         holder.delete(filename)
         fileDomainRepo.delete(filename)
+        getFileNames().remove(filename)
     }
 
     @Override
     void delete() {
         holder.delete()
         fileDomainRepo.delete()
+        setFileNames([])
     }
 
     @Override
