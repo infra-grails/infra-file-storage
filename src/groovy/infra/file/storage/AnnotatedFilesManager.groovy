@@ -30,11 +30,11 @@ class AnnotatedFilesManager extends AbstractFilesManager {
             getter += propertyName.substring(1)
             domain.class.getMethod(getter)
 
-            if (!domain."${propertyName}") {
-                domain."${propertyName}" = []
+            if (!domain[propertyName]) {
+                domain[propertyName] = []
             }
 
-            fileNames = domain."${propertyName}"
+            fileNames = (Collection<String>)domain[propertyName]
         } catch(NoSuchMethodException e) {
             fileNames = []
         }

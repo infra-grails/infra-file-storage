@@ -1,6 +1,5 @@
 package infra.file.storage
 
-import grails.util.Environment
 import infra.file.storage.domain.DomainFilesManager
 import infra.file.storage.domain.FileDomainRepoProvider
 import org.springframework.context.ApplicationContext
@@ -14,8 +13,7 @@ class FileStorageService implements ApplicationContextAware {
     private Map<String, FileStorage> storages = [:]
     private FileStorage defaultStorage
 
-    String deployedStorageName = "s3"
-    String developmentStorageName = "local"
+    String defaultStorageName
 
     def grailsApplication
     FileDomainRepoProvider fileDomainRepoProvider
@@ -25,9 +23,8 @@ class FileStorageService implements ApplicationContextAware {
         for (FileStorage fs : applicationContext.getBeansOfType(FileStorage).values()) {
             storages.put(fs.name, fs)
         }
-        deployedStorageName = grailsApplication.config.plugin.fileStorageService.deployed ?: "s3"
-        developmentStorageName = grailsApplication.config.plugin.fileStorageService.development ?: "local"
-        defaultStorage = storages.get(Environment.isWarDeployed() ? deployedStorageName : developmentStorageName)
+        defaultStorageName = grailsApplication.config.plugin.infraFileStorage.defaultStorageName ?: "local"
+        defaultStorage = storages.get(defaultStorageName)
         assert defaultStorage
     }
 

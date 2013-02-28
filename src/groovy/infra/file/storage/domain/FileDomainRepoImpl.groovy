@@ -7,8 +7,6 @@ import infra.file.storage.FileDomain
  * @since 2/18/13 6:35 PM
  */
 class FileDomainRepoImpl implements FileDomainRepo {
-    private Map<String,FileDomain> fileDomainMap = [:]
-
     private final String path
     private final String storageName
     private final String bucket
@@ -24,41 +22,42 @@ class FileDomainRepoImpl implements FileDomainRepo {
         FileDomain.findAllWhere(
                 path: path,
                 storageName: storageName,
-                bucket: bucket
+                bucket: bucket,
         )
     }
 
     @Override
     FileInfoDomain update(String filename, long size) {
-        FileDomain heldFile = (FileDomain)FileDomain.findOrSaveWhere(
-                filename: filename,
-                path: path,
-                bucket: bucket,
-                storageName: storageName
-        )
-        if (heldFile.size != size) {
+        FileDomain heldFile = (FileDomain) getDomain(filename)
+        if (!heldFile) {
+            heldFile = new FileDomain(
+                    path: path,
+                    storageName: storageName,
+                    bucket: bucket,
+                    filename: filename,
+                    size: size
+            )
+            heldFile.save(failOnError: true, flush: true)
+        } else if (heldFile.size != size) {
             heldFile.size = size
-            heldFile.save()
+            heldFile.save(failOnError: true)
         }
         assert heldFile.id
-        fileDomainMap.put(filename, heldFile)
     }
 
     @Override
     FileInfoDomain getDomain(String filename) {
-        if (!fileDomainMap.containsKey(filename)) {
-            fileDomainMap.put filename, (FileDomain)FileDomain.findWhere(filename: filename, path: path, bucket: bucket, storageName: storageName)
-        }
-        fileDomainMap.get(filename)
+        FileDomain.findWhere(path: path,
+                storageName: storageName,
+                bucket: bucket,
+                filename: filename)
     }
 
-    void delete(String filename){
+    void delete(String filename) {
         getDomain(filename)?.delete()
-        fileDomainMap.remove(filename)
     }
 
     void delete() {
         FileDomain.deleteAll(FileDomain.findAllWhere(path: path, bucket: bucket, storageName: storageName))
-        fileDomainMap.clear()
     }
 }
