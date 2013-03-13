@@ -31,7 +31,9 @@ abstract public class FileStoragePrototype implements FileStorage {
         if (filename == null || filename.isEmpty()) filename = file.getOriginalFilename();
         File tmp = File.createTempFile("uploaded", filename);
         file.transferTo(tmp);
-        return store(tmp, path, filename, bucket);
+        String storedFilename = store(tmp, path, filename, bucket);
+        tmp.delete();
+        return storedFilename;
     }
 
     @Override
