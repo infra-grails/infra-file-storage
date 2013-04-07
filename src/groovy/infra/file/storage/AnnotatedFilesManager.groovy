@@ -15,7 +15,7 @@ class AnnotatedFilesManager extends AbstractFilesManager {
 
     AnnotatedFilesManager(def domain, FileStorageService fileStorageService, FilesHolder holder) {
         this.domain = domain
-        this.holder = holder instanceof FilesHolder ? holder : (FilesHolder)domain.class.getAnnotation(FilesHolder)
+        this.holder = holder instanceof FilesHolder ? holder : (FilesHolder) domain.class.getAnnotation(FilesHolder)
 
         propertyName = this.holder.filesProperty()
 
@@ -25,17 +25,12 @@ class AnnotatedFilesManager extends AbstractFilesManager {
         storage = fileStorageService.getFileStorage(storageName)
 
         try {
-            String getter = "get"
-            getter += propertyName[0].toUpperCase()
-            getter += propertyName.substring(1)
-            domain.class.getMethod(getter)
-
             if (!domain[propertyName]) {
                 domain[propertyName] = []
             }
 
-            fileNames = (Collection<String>)domain[propertyName]
-        } catch(NoSuchMethodException e) {
+            fileNames = (Collection<String>) domain[propertyName]
+        } catch (NoSuchMethodException e) {
             fileNames = []
         }
     }

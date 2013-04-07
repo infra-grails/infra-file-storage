@@ -22,10 +22,10 @@ class LocalStorageConfig {
             return;
         }
 
-        if(localConf.containsKey("localRoot")) localRoot = localConf.localRoot.toString().isEmpty() ? localRoot : localConf.localRoot.toString();
-        if(localConf.containsKey("defaultBucket")) defaultBucket = localConf.defaultBucket.toString();
+        if (localConf.containsKey("localRoot")) localRoot = localConf.localRoot.toString().isEmpty() ? localRoot : localConf.localRoot.toString();
+        if (localConf.containsKey("defaultBucket")) defaultBucket = localConf.defaultBucket.toString();
 
-        if(localConf.containsKey("urlRoot")) urlRoot = localConf.urlRoot.toString();
+        if (localConf.containsKey("urlRoot")) urlRoot = localConf.urlRoot.toString();
 
         if (urlRoot == null || urlRoot.isEmpty()) {
             urlRoot = grailsApplication.config.grails.serverURL?.toString();

@@ -1,6 +1,8 @@
 package infra.file.storage;
 
 import infra.file.storage.config.LocalStorageConfig;
+import infra.file.storage.ex.IoStorageException;
+import infra.file.storage.ex.StorageException;
 import org.apache.commons.io.FileUtils;
 import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,22 +26,26 @@ public class LocalFileStorage extends FileStoragePrototype {
     }
 
     @Override
-    public String store(final File file, String path, String filename, String bucket) throws IOException {
+    public String store(final File file, String path, String filename, String bucket) throws StorageException {
         createDir(path, bucket);
         File newFile = new File(getFullLocalPath(path, (filename == null || filename.isEmpty()) ? file.getName() : filename,
                 bucket));
-        FileUtils.copyFile(file, newFile);
+        try {
+            FileUtils.copyFile(file, newFile);
+        } catch (IOException e) {
+            throw new IoStorageException(e);
+        }
 
         return newFile.getName();
     }
 
     @Override
-    public void delete(String path, String filename, String bucket) {
+    public void delete(String path, String filename, String bucket) throws StorageException {
         new File(getFullLocalPath(path, filename, bucket)).delete();
     }
 
     @Override
-    public boolean exists(String path, String filename, String bucket) throws Exception {
+    public boolean exists(String path, String filename, String bucket) throws StorageException {
         return new File(getFullLocalPath(path, filename, bucket)).isFile();
     }
 
@@ -49,12 +55,12 @@ public class LocalFileStorage extends FileStoragePrototype {
     }
 
     @Override
-    public long getSize(String path, String filename, String bucket) {
+    public long getSize(String path, String filename, String bucket) throws StorageException {
         return new File(getFullLocalPath(path, filename, bucket)).length();
     }
 
     @Override
-    public File getFile(String path, String filename, String bucket) {
+    public File getFile(String path, String filename, String bucket) throws StorageException {
         return new File(getFullLocalPath(path, filename, bucket));
     }
 

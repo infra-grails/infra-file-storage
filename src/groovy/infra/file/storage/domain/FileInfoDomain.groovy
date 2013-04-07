@@ -6,6 +6,8 @@ package infra.file.storage.domain
  */
 interface FileInfoDomain {
     String getFilename()
+
     Long getSize()
+
     void delete()
 }

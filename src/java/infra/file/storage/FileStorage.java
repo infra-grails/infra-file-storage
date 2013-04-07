@@ -1,5 +1,6 @@
 package infra.file.storage;
 
+import infra.file.storage.ex.StorageException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -26,7 +27,7 @@ public interface FileStorage {
      * @return actual stored filename
      * @throws Exception
      */
-    public String store(final MultipartFile file, String path, String filename, String bucket) throws Exception;
+    public String store(final MultipartFile file, String path, String filename, String bucket) throws StorageException;
 
     /**
      * Stores a file, identified by path and filename, in a bucket storage
@@ -38,7 +39,7 @@ public interface FileStorage {
      * @return actual stored filename
      * @throws Exception
      */
-    public String store(final File file, String path, String filename, String bucket) throws Exception;
+    public String store(final File file, String path, String filename, String bucket) throws StorageException;
 
     /**
      * Deletes a file
@@ -48,7 +49,7 @@ public interface FileStorage {
      * @param bucket
      * @throws Exception
      */
-    public void delete(String path, String filename, String bucket) throws Exception;
+    public void delete(String path, String filename, String bucket) throws StorageException;
 
     /**
      * Checks if a file really exists in the storage
@@ -59,7 +60,7 @@ public interface FileStorage {
      * @return
      * @throws Exception
      */
-    public boolean exists(String path, String filename, String bucket) throws Exception;
+    public boolean exists(String path, String filename, String bucket) throws StorageException;
 
     /**
      * Returns an accessible absolute url for a file
@@ -79,14 +80,15 @@ public interface FileStorage {
      * @param bucket
      * @return
      */
-    public long getSize(String path, String filename, String bucket) throws Exception;
+    public long getSize(String path, String filename, String bucket) throws StorageException;
 
     /**
      * Returns file, downloads it if necessary
+     *
      * @param path
      * @param filename
      * @param bucket
      * @return
      */
-    public File getFile(String path, String filename, String bucket) throws Exception;
+    public File getFile(String path, String filename, String bucket) throws StorageException;
 }

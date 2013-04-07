@@ -22,7 +22,7 @@ class DomainFilesManager implements FilesManager {
     }
 
     void refresh() {
-        setFileNames fileDomainRepo.list().collect{FileInfoDomain d -> d.filename}
+        setFileNames fileDomainRepo.list().collect { FileInfoDomain d -> d.filename }
     }
 
     @Override

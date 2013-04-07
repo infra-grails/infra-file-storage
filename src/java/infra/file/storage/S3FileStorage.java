@@ -1,6 +1,8 @@
 package infra.file.storage;
 
 import infra.file.storage.config.S3StorageConfig;
+import infra.file.storage.ex.IoStorageException;
+import infra.file.storage.ex.StorageException;
 import org.apache.log4j.Logger;
 import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.jets3t.service.CloudFrontService;
@@ -21,7 +23,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * @author alari
@@ -44,7 +45,7 @@ public class S3FileStorage extends FileStoragePrototype {
     }
 
     @Override
-    public String store(final MultipartFile file, String path, String filename, String bucket) throws Exception {
+    public String store(final MultipartFile file, String path, String filename, String bucket) throws StorageException {
         if (filename == null || filename.isEmpty()) filename = file.getOriginalFilename();
 
         S3Object o = new S3Object();
@@ -52,13 +53,21 @@ public class S3FileStorage extends FileStoragePrototype {
         o.setAcl(AccessControlList.REST_CANNED_PUBLIC_READ);
 
         // Pushing as stream
-        o.setDataInputStream(file.getInputStream());
+        try {
+            o.setDataInputStream(file.getInputStream());
+        } catch (IOException e) {
+            throw new IoStorageException(e);
+        }
         o.setContentLength(file.getSize());
         o.setContentType(file.getContentType());
 
         bucket = getBucket(bucket);
 
-        s3Service.putObjectMaybeAsMultipart(bucket, o, 5242880);
+        try {
+            s3Service.putObjectMaybeAsMultipart(bucket, o, 5242880);
+        } catch (ServiceException e) {
+            throw new StorageException(e);
+        }
         log.info("Saved to s3 storage as stream: ".concat(o.getKey()));
 
         invalidateCloudFront(o.getKey(), bucket);
@@ -67,32 +76,46 @@ public class S3FileStorage extends FileStoragePrototype {
     }
 
     @Override
-    public String store(final File file, String path, String filename, String bucket) throws IOException, NoSuchAlgorithmException, ServiceException {
-        S3Object o = new S3Object(file);
-        o.setKey(buildObjectKey(path, filename == null || filename.isEmpty() ? file.getName() : filename));
+    public String store(final File file, String path, String filename, String bucket) throws StorageException {
+        try {
+            S3Object o = new S3Object(file);
+            o.setKey(buildObjectKey(path, filename == null || filename.isEmpty() ? file.getName() : filename));
 
-        o.setAcl(AccessControlList.REST_CANNED_PUBLIC_READ);
+            o.setAcl(AccessControlList.REST_CANNED_PUBLIC_READ);
 
-        bucket = getBucket(bucket);
+            bucket = getBucket(bucket);
 
-        s3Service.putObjectMaybeAsMultipart(bucket, o, 5242880);
-        log.info("Saved ${o.key} to s3 storage: ".concat(o.getKey()));
+            s3Service.putObjectMaybeAsMultipart(bucket, o, 5242880);
+            log.info("Saved ${o.key} to s3 storage: ".concat(o.getKey()));
 
-        // Invalidate objects
-        invalidateCloudFront(o.getKey(), bucket);
+            // Invalidate objects
+            invalidateCloudFront(o.getKey(), bucket);
 
-        return filename;
+            return filename;
+        } catch (IOException e) {
+            throw new IoStorageException(e);
+        } catch (Exception e) {
+            throw new StorageException(e);
+        }
     }
 
 
     @Override
-    public void delete(String path, String filename, String bucket) throws ServiceException {
-        s3Service.deleteObject(getBucket(bucket), buildObjectKey(path, filename));
+    public void delete(String path, String filename, String bucket) throws StorageException {
+        try {
+            s3Service.deleteObject(getBucket(bucket), buildObjectKey(path, filename));
+        } catch (ServiceException e) {
+            throw new StorageException(e);
+        }
     }
 
     @Override
-    public boolean exists(String path, String filename, String bucket) throws Exception {
-        return s3Service.isObjectInBucket(getBucket(bucket), buildObjectKey(path, filename));
+    public boolean exists(String path, String filename, String bucket) throws StorageException {
+        try {
+            return s3Service.isObjectInBucket(getBucket(bucket), buildObjectKey(path, filename));
+        } catch (ServiceException e) {
+            throw new StorageException(e);
+        }
     }
 
     @Override
@@ -107,24 +130,34 @@ public class S3FileStorage extends FileStoragePrototype {
     }
 
     @Override
-    public long getSize(String path, String filename, String bucket) throws Exception {
-        return s3Service.getObjectDetails(getBucket(bucket), buildObjectKey(path, filename)).getContentLength();
+    public long getSize(String path, String filename, String bucket) throws StorageException {
+        try {
+            return s3Service.getObjectDetails(getBucket(bucket), buildObjectKey(path, filename)).getContentLength();
+        } catch (ServiceException e) {
+            throw new StorageException(e);
+        }
     }
 
     @Override
-    public File getFile(String path, String filename, String bucket) throws Exception {
-        S3Object object = s3Service.getObject(getBucket(bucket), buildObjectKey(path, filename));
-        File f = File.createTempFile(filename, "s3");
+    public File getFile(String path, String filename, String bucket) throws StorageException {
+        try {
+            S3Object object = s3Service.getObject(getBucket(bucket), buildObjectKey(path, filename));
+            File f = File.createTempFile(filename, "s3");
 
-        ReadableByteChannel rbc = Channels.newChannel(object.getDataInputStream());
-        FileOutputStream fos = new FileOutputStream(f);
-        fos.getChannel().transferFrom(rbc, 0, 1 << 24);
+            ReadableByteChannel rbc = Channels.newChannel(object.getDataInputStream());
+            FileOutputStream fos = new FileOutputStream(f);
+            fos.getChannel().transferFrom(rbc, 0, 1 << 24);
 
-        return f;
+            return f;
+        } catch (IOException e) {
+            throw new IoStorageException(e);
+        } catch (ServiceException e) {
+            throw new StorageException(e);
+        }
     }
 
     private void invalidateCloudFront(final String objectKey, final String bucket) {
-        if(!config.isInvalidateCloudFront()) {
+        if (!config.isInvalidateCloudFront()) {
             return;
         }
         try {

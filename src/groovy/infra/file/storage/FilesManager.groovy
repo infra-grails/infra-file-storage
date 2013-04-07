@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile
  */
 public interface FilesManager {
     File getFile()
+
     File getFile(String filename)
 
     public FileStorage getStorage()

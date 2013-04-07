@@ -6,8 +6,12 @@ package infra.file.storage.domain
  */
 public interface FileDomainRepo {
     Collection<FileInfoDomain> list()
+
     FileInfoDomain update(String filename, long size)
+
     FileInfoDomain getDomain(String filename)
+
     void delete(String filename)
+
     void delete()
 }

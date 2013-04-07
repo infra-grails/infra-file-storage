@@ -1,6 +1,7 @@
 package infra.file.storage
 
 import groovy.transform.CompileStatic
+import infra.file.storage.ex.StorageException
 import org.springframework.web.multipart.MultipartFile
 
 /**
@@ -10,11 +11,15 @@ import org.springframework.web.multipart.MultipartFile
 @CompileStatic
 abstract class AbstractFilesManager implements FilesManager {
 
-    File getFile(String filename=null) {
+    File getFile(String filename = null) {
         if (!filename) {
             if (getFileNames().size() == 1) filename = getFileNames().first()
         }
-        getStorage().getFile(getPath(), filename, getBucket())
+        try {
+            getStorage().getFile(getPath(), filename, getBucket())
+        } catch (StorageException e) {
+            e.printStackTrace()
+        }
     }
 
     /**
@@ -37,7 +42,11 @@ abstract class AbstractFilesManager implements FilesManager {
      * @param filename
      */
     void delete(String filename) {
-        getStorage().delete(getPath(), filename, getBucket())
+        try {
+            getStorage().delete(getPath(), filename, getBucket())
+        } catch (StorageException e) {
+            e.printStackTrace()
+        }
         getFileNames().remove(filename)
     }
 
@@ -46,7 +55,11 @@ abstract class AbstractFilesManager implements FilesManager {
      */
     void delete() {
         for (String filename : getFileNames()) {
-            getStorage().delete(getPath(), filename, getBucket())
+            try {
+                getStorage().delete(getPath(), filename, getBucket())
+            } catch (StorageException e) {
+                e.printStackTrace()
+            }
         }
         setFileNames([])
     }
@@ -57,7 +70,11 @@ abstract class AbstractFilesManager implements FilesManager {
      * @return
      */
     boolean exists(String filename) {
-        getStorage().exists(getPath(), filename, getBucket())
+        try {
+            getStorage().exists(getPath(), filename, getBucket())
+        } catch (StorageException e) {
+            e.printStackTrace()
+        }
     }
 
     /**
@@ -68,7 +85,11 @@ abstract class AbstractFilesManager implements FilesManager {
      */
     String store(File file, String filename = null) {
         checkFile(file)
-        filename = getStorage().store(file, getPath(), filename, getBucket())
+        try {
+            filename = getStorage().store(file, getPath(), filename, getBucket())
+        } catch (StorageException e) {
+            e.printStackTrace()
+        }
         getFileNames().add filename
         filename
     }
@@ -81,13 +102,22 @@ abstract class AbstractFilesManager implements FilesManager {
      */
     String store(MultipartFile file, String filename = null) {
         checkFile(file)
-        filename = getStorage().store(file, getPath(), filename, getBucket())
+        try {
+            filename = getStorage().store(file, getPath(), filename, getBucket())
+        } catch (StorageException e) {
+            e.printStackTrace()
+        }
         getFileNames().add filename
         filename
     }
 
     long getSize(String filename) {
-        getStorage().getSize(getPath(), filename, getBucket());
+        try {
+            return getStorage().getSize(getPath(), filename, getBucket())
+        } catch (StorageException e) {
+            e.printStackTrace()
+        }
+        0
     }
 
     private void checkFile(final MultipartFile file) {
