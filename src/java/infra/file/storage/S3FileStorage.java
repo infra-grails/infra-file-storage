@@ -143,6 +143,7 @@ public class S3FileStorage extends FileStoragePrototype {
         try {
             S3Object object = s3Service.getObject(getBucket(bucket), buildObjectKey(path, filename));
             File f = File.createTempFile(filename, "s3");
+            f.deleteOnExit();
 
             ReadableByteChannel rbc = Channels.newChannel(object.getDataInputStream());
             FileOutputStream fos = new FileOutputStream(f);
