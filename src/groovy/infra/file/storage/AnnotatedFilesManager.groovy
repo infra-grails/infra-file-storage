@@ -30,7 +30,7 @@ class AnnotatedFilesManager extends AbstractFilesManager {
             }
 
             fileNames = (Collection<String>) domain[propertyName]
-        } catch (NoSuchMethodException e) {
+        } catch (MissingPropertyException e) {
             fileNames = []
         }
     }
