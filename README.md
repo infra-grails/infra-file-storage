@@ -1,49 +1,44 @@
 Grails plugin: infra-file-storage
 ====================
 
-Stores files on Amazon S3 (or another storage) when deployed, and in a plain directory during testing/developing.
+Abstracts file storing infrastructure. Allows to change storage when deploying/testing an app, caching stored files stats, and so on.
 
-Plugin is devoted to become a platform solution to store files in Grails.
+Currently bundled storages:
+- Local file system
+- Amazon S3
 
-Usage
+Use the plugin, post your feedback!
+
+Current release: _0.2-SNAPSHOT_
+
+Installation
 ---------------------
 
-Take a look on [Spock Integration tests](https://github.com/alari/infra-file-storage/tree/master/test/integration/infra/file/storage)
-
-There are two ways to use plugin:
-
-- Use basic files holder, accessible with `fileStorageService.getHolder(path, bucket=null)`
-
-Example: get and save something
+Add to your `BuildConfig.groovy`:
 
 ```groovy
-    @Autowired
-    def fileStorageService
-     // ...
-    def holder = fileStorageService.getHolder("test")
-    holder.store((File)file)
-    assert holder.exists(file.name)
-    return holder.getUrl(file.name)
-```
-
-- Implement your own files mapping logic with `@FilesHolder` annotation ([src/groovy/ru/mirari/infra/file/FilesHolder.groovy])
-
-Example: files holder domain class
-
-```groovy
-@FilesHolder(path={id})
-DomainHolder {
-    static hasMany = [fileNames: String]
-}
+grails.project.dependency.resolution = {
+   ...
+   repositories {
+           ...
+           mavenRepo "http://mvn.quonb.org/repo"
+           grailsRepo "http://mvn.quonb.org/repo", "quonb"
+           ...
+   }
+   plugins {
+           compile 'infra-file-storage:0.2-SNAPSHOT'
+           ...
+   }
 ```
 
 Configuration
 ---------------------
 
-At first, you should assign your Config.groovy:
+Use `Config.groovy` to change the defaults:
 
-``` groovy
-    plugin.infraFileStorage {
+```groovy
+plugin{
+    infraFileStorage {
                 local {
                     localRoot = "./web-app/" // (optional) where to store local files
                     defaultBucket = "storage" // (optional) will appear as a folder in your localRoot
@@ -58,26 +53,36 @@ At first, you should assign your Config.groovy:
                         bucketName = "http://customUrlRoot"
                     }
                 }
+                defaultStorageName = "local" // a storage name to use
             }
         }
     }
+}
 ```
 
-Then just use `fileStorageService` Spring bean to manage your files.
+Usage
+---------------------
 
-If you want to change environment-specified behaviour of file storage, overwrite `deployedStorageName` and/or
-`deployedStorageName` bean values of `fileStorageService.groovy`:
+Take a look on [Spock Integration tests](https://github.com/alari/infra-file-storage/tree/master/test/integration/infra/file/storage)
 
-TODOs
------------------------
+#### Basic files manager
 
-- Make `@FileHolder` annotation for single file holding
-- Create basic taglibs to retrieve files
-- Add support for plain local storage on deployment (currently not handling root folder well, not tested)
-- Substitute particular storage strategies (s3, rackspace, mongo, ...) into separate plugins to clean build dependencies
-- Make `@FileField` annotation
+```groovy
+def holder = fileStorageService.getManager(path, bucket, false)
+```
+
+This method will return you a manager instance to manage files in a `bucked` and `path`, without caching files stats in database.
+You may take a look on available methods there: [FilesManager](https://github.com/alari/infra-file-storage/tree/master/src/groovy/infra/file/storage/FilesManager.groovy)
+
+#### Annotated files manager
+
+A more sophisticated way to manage files is to annotate its holder (e.g. domain object) with [FilesHolder](https://github.com/alari/infra-file-storage/tree/master/src/groovy/infra/file/storage/FilesHolder.groovy) annotation
+
+If you set `enableFileDomains` option of an annotation to `true` (default is `true`), file stats will be stored in database. To change the stats persisting strategy, take a look there: [beans to override](https://github.com/alari/infra-file-storage/tree/master/src/groovy/infra/file/storage/domain/).
+
+
 
 Companion plugins
 -----------------------
 
-[Images Storage & Resizing](https://github.com/alari/infra-images)
+[Images Storing & Resizing](https://github.com/alari/infra-images)

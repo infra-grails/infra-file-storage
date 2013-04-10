@@ -16,7 +16,7 @@ class InfraFileStorageGrailsPlugin {
     def author = "Dmitry Kurinskiy"
     def authorEmail = "name.alari@gmail.com"
     def description = '''\
-Provides convenient methods to store files on local path in dev/test mode and on Amazon S3 on production.
+Provides convenient methods to store files on local path in dev/test mode and on Amazon S3 (or another medium) on production.
 '''
 
     // URL to the plugin's documentation

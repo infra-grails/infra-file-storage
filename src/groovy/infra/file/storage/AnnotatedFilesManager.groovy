@@ -25,14 +25,19 @@ class AnnotatedFilesManager extends AbstractFilesManager {
         storage = fileStorageService.getFileStorage(storageName)
 
         try {
-            if (!domain[propertyName]) {
-                domain[propertyName] = []
-            }
+            if (propertyName && domain.hasProperty(propertyName)) {
+                if (!domain[propertyName]) {
+                    domain[propertyName] = []
+                }
 
-            fileNames = (Collection<String>) domain[propertyName]
+                fileNames = (Collection<String>) domain[propertyName]
+            } else {
+                fileNames = []
+            }
         } catch (MissingPropertyException e) {
             fileNames = []
         }
+
     }
 
     @Override

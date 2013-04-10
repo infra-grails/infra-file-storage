@@ -13,7 +13,7 @@ import java.lang.annotation.Target
 @Target(ElementType.TYPE)
 public @interface FilesHolder {
     /**
-     * A closure<String> that returns a bucket name associated with current holder domain
+     * A Closure<String> that returns a bucket name associated with current holder domain
      * @return
      */
     Class bucket() default {}
@@ -34,7 +34,7 @@ public @interface FilesHolder {
      * What List<String> property of an annotated domain object to read and write file names to
      * @return
      */
-    String filesProperty() default "fileNames"
+    String filesProperty() default ""
 
     /**
      * List of allowed files extensions -- empty to no restrictions

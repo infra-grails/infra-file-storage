@@ -39,6 +39,7 @@ class FileStorageService implements ApplicationContextAware {
      * @param file
      * @param filename
      */
+    @Deprecated
     void store(def domain, final File file, String filename = null) {
         getManager(domain).store(file, filename)
     }
@@ -50,6 +51,7 @@ class FileStorageService implements ApplicationContextAware {
      * @param file
      * @param filename
      */
+    @Deprecated
     void store(def domain, final MultipartFile file, String filename = null) {
         getManager(domain).store(file, filename)
     }
@@ -61,6 +63,7 @@ class FileStorageService implements ApplicationContextAware {
      * @param filename
      * @return
      */
+    @Deprecated
     boolean exists(def domain, String filename) {
         getManager(domain).exists(filename)
     }
@@ -70,6 +73,7 @@ class FileStorageService implements ApplicationContextAware {
      *
      * @param domain
      */
+    @Deprecated
     void delete(def domain) {
         getManager(domain).delete()
     }
@@ -80,6 +84,7 @@ class FileStorageService implements ApplicationContextAware {
      * @param domain
      * @param filename
      */
+    @Deprecated
     void delete(def domain, String filename) {
         getManager(domain).delete(filename)
     }
@@ -91,6 +96,7 @@ class FileStorageService implements ApplicationContextAware {
      * @param filename
      * @return
      */
+    @Deprecated
     String getUrl(def domain, String filename = null) {
         getManager(domain).getUrl(filename)
     }

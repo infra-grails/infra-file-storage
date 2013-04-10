@@ -5,9 +5,6 @@ import org.springframework.core.io.ClassPathResource
 import spock.lang.Shared
 import spock.lang.Stepwise
 
-/**
- * See the API for {@link grails.test.mixin.support.GrailsUnitTestMixin} for usage instructions
- */
 @Stepwise
 class LocalFileStorageSpec extends IntegrationSpec {
 
@@ -24,11 +21,12 @@ class LocalFileStorageSpec extends IntegrationSpec {
     }
 
     @FilesHolder(
-    path = {
-        assert id
-        "test/" + id
-    },
-    allowedExtensions = ["tmp"]
+            path = {
+                assert id
+                "test/" + id
+            },
+            allowedExtensions = ["tmp"],
+            filesProperty = "fileNames"
     )
     private static class Holder {
         String id
