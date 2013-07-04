@@ -2,7 +2,7 @@ import infra.file.storage.domain.FileDomainRepoProviderImpl
 
 class InfraFileStorageGrailsPlugin {
     // the plugin version
-    def version = "0.2-SNAPSHOT"
+    def version = "0.2.0"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "2.0 > *"
     // the other plugins this plugin depends on
