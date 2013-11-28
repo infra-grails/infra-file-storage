@@ -3,7 +3,7 @@ grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir = "target/test-reports"
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
 
-grails.project.repos.default = "quonb-release"
+grails.project.repos.default = "quonb-snapshot"
 
 grails.project.dependency.distribution = {
     String serverRoot = "http://mvn.quonb.org"
