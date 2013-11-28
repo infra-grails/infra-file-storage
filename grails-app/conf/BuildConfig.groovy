@@ -8,7 +8,7 @@ grails.project.repos.default = "quonb-release"
 grails.project.dependency.distribution = {
     String serverRoot = "http://mvn.quonb.org"
     remoteRepository(id: 'quonb-snapshot', url: serverRoot + '/plugins-snapshot-local/')
-    remoteRepository(id: 'quonb-release', url: serverRoot + '/repo/')
+    remoteRepository(id: 'quonb-release', url: serverRoot + '/artifactory/plugins-release-local/')
 }
 
 grails.project.dependency.resolution = {
