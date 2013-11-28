@@ -3,12 +3,12 @@ grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir = "target/test-reports"
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
 
-grails.project.repos.default = "quonb-snapshot"
+grails.project.repos.default = "quonb-release"
 
 grails.project.dependency.distribution = {
     String serverRoot = "http://mvn.quonb.org"
     remoteRepository(id: 'quonb-snapshot', url: serverRoot + '/plugins-snapshot-local/')
-    remoteRepository(id: 'quonb-release', url: serverRoot + '/plugins-release-local/')
+    remoteRepository(id: 'quonb-release', url: serverRoot + '/repo/')
 }
 
 grails.project.dependency.resolution = {
